@@ -1,5 +1,43 @@
 # react-app01 코딩실습 
+## 실습페이지 구현 예정 목록
+<table>
+    <tbody>
+        <tr>
+            <th>24.mm.dd</th>
+            <td>1. Join.jsx 회원가입란 체크박스 전체동의, 개별동의 개발</td>
+        </tr>
+        <tr>
+            <th>24.mm.dd</th>
+            <td>2. PageHeader.jsx 반응형 레이아웃고안</td>
+        </tr>
+        <tr>
+            <th>24.mm.dd</th>
+            <td>3. PageHeader.jsx 다크모드 개발</td>
+        </tr>
+        <tr>
+            <th>24.mm.dd</th>
+            <td>4. PageHeader.jsx 로그인 로그아웃 개발</td>
+        </tr>
+        <tr>
+            <th>24.mm.dd</th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>24.mm.dd</th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>24.mm.dd</th>
+            <td></td>
+        </tr>
+    </tbody>
+<table>
 
+
+## 실습페이지 기능설명
+
+
+---
 ## React란?
 ### ⏳ 리액트 이전 프론트엔드 개발방식
 서버 사이드 렌더링(SSR)이나 DOM 조작을 통해 동적인 웹 페이지를 구축<br>

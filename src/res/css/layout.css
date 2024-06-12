@@ -38,6 +38,7 @@ main section:nth-child(even) {
 /* 메인제외 서브페이지 */
 .sub-wrap {
     padding: 50px 0;
+    font-size: 14px;
 }
 
 .sub-wrap+footer {
@@ -100,23 +101,86 @@ main section:nth-child(even) {
 }
 
 /* 회원가입 */
-.sub-wrap.join{
+.sub-wrap.join {
     text-align: left;
 }
-.sub-wrap.join .join-box{
+
+.sub-wrap.join .join-box {
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sub-wrap.join .join-box>div:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.sub-wrap.join .join-box>div label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.sub-wrap.join .join-box>div label .essential {
+    color: var(--point-color);
+    font-weight: 700;
+}
+
+.sub-wrap.join .join-box>div label .optional {
+    color: var(--sub-color);
+    font-weight: 500;
+}
+
+.sub-wrap.join .join-box>div input {
+    display: none;
 
 }
-.sub-wrap.join .join-box > div{
 
+.sub-wrap.join .join-box>div .checkmark {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
 }
 
-.sub-wrap.join .join-box > div input{
-    
+.sub-wrap.join .join-box>div input[type="checkbox"]:checked+.checkmark:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 5px;
+    width: 6px;
+    height: 11px;
+    border: solid #007bff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }
 
-.sub-wrap.join .join-box > div label{
+.sub-wrap.join .join-box>button {}
 
+.sub-wrap.join .join-box>button:hover {
+    background: var(--main-color);
+    box-shadow: var(--box-active-shadow);
 }
+
+.sub-wrap.join .join-box>button {
+    background: #bbb;
+    padding: 10px 0;
+    width: min(200px, 50%);
+    color: #fff;
+    font-size: 18px;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px auto 0;
+}
+
 
 /* 푸터 */
 footer {
