@@ -1,0 +1,119 @@
+:root {
+    --main-color: #89CFF0;
+    --sub-color: #7BAFD4;
+    --point-color: #246BCE;
+    --gray-color: #ddd;
+    --text-color: #222;
+    --white-color: #fff;
+    --box-shadow: 0 0px 2px 0px rgb(0 0 0 / 40%);
+    --box-active-shadow: 0 0px 2px 0px #89CFF0;
+}
+
+body {
+    font-size: 14px;
+    font-family: 'SUITE';
+    text-align: center;
+    box-sizing: border-box;
+}
+
+body * {
+    box-sizing: border-box;
+}
+
+.inner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.show-1200 {
+    display: none;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tal {
+    text-align: left;
+}
+
+.tac {
+    text-align: center;
+}
+
+.tar {
+    text-align: right;
+}
+
+input {
+    font-size: 14px;
+    padding: 5px 10px;
+}
+input:focus
+{
+    border: 1px solid var(--main-color);
+    box-shadow: 0 0 3px var(--main-color);
+    outline-offset: 0px;
+    outline: none;
+}
+.list {
+    gap: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.list li a {
+    padding-right: 15px;
+    font-size: 16px;
+    position: relative;
+}
+
+.list li:not(:last-child) a::before {
+    content: '';
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    background: #000;
+    height: 50%;
+}
+
+.emoji{
+    font-size: 20px;
+}
+@media screen and (max-width:1200px) {
+    body {
+        font-size: clamp(11px, 2vmin, 14px);
+    }
+
+    .inner {
+        width: 97%;
+    }
+
+    .show-1200 {
+        display: block;
+    }
+
+    .hide-1200 {
+        display: none;
+    }
+
+}
+
+@media screen and (max-width:768px) {
+    .show-768 {
+        display: block;
+    }
+
+    .hide-768 {
+        display: none;
+    }
+
+}
