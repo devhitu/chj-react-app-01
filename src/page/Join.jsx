@@ -1,6 +1,6 @@
 import React from 'react';
-import PageHeader from '../component/PageHeader';
-import PageFooter from '../component/PageFooter';
+import PageHeader from '../component/Header';
+import PageFooter from '../component/Footer';
 
 export default function Join() {
     return (
