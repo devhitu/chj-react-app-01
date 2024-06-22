@@ -1,13 +1,13 @@
-import { create } from 'zustand';
+// import { create } from 'zustand';
 
-const useTestStore = create((set) => ({
-  value: '',
+// const useTestStore = create((set) => ({
+//   value: '',
 
 
   
-  setValue: (data) => set((state) => ({ value: data })),
-  rsetvalue: () => set({ value: 0 }),
-}));
+//   setValue: (data) => set((state) => ({ value: data })),
+//   rsetvalue: () => set({ value: 0 }),
+// }));
 
 
-export {useTestStore}
+// export {useTestStore}

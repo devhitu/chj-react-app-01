@@ -1,0 +1,91 @@
+
+/* 헤더 */
+/* header {
+    background-color: var(--main-color);
+    color: var(--white-color);
+    line-height: 120px;
+}
+
+header h1 {
+    font-size: 40px;
+    font-weight: 900;
+}
+
+header .flex {
+    justify-content: space-between;
+}
+
+header .list li:not(:last-child) a::before {
+    background: #fff;
+} */
+
+header{position: fixed;width: 100%;left: 0;top: 0;z-index: 2;}
+header .header-wrap{display: flex;align-items: center;justify-content: space-between;padding: 0 16px;overflow: hidden;height: 60px;position: fixed;background: #fff;width: 100%;top: 0;}
+header .logo-wrap {display: flex;align-items: center;gap:10px;height: 55px;text-align: center;}
+header .logo-wrap .menu{width: 65px;}
+header .logo-wrap .logo a{display: flex;width: 120px;align-items: center;justify-content: center;}
+header .logo-wrap img{width: 24px;height: 24px;}
+header .logo-wrap .logo img{width: 90px;height: auto;}
+
+header .header-wrap2{position: fixed;width: 100%;top: 60px;display: flex;align-items: flex-start;}
+header .filter-wrap{padding: 10px 30px;background: #fff;width: 100%;height: 55px;display: flex;align-items: center;}
+header .filter-wrap ul{display: flex;gap:10px}
+header .filter-wrap ul li{border-radius: 5px;}
+header .filter-wrap ul li a{background: #ddd;color:#000;padding: 3px 8px;border-radius: 5px;font-size: 14px;}
+header .filter-wrap ul li.on a{background: #000;color:#fff}
+
+
+
+
+
+/* 헤더사이드 */
+.asideDim{position: absolute;width: 100%;height: 700vh;background: #000;opacity: 0.8;}
+
+
+aside {
+    background: #fff;
+    text-align: left;
+    z-index: 2;
+    height: 100vh;overflow-y: auto;
+}
+aside img {width: 24px;height: 24px;}
+
+
+/* btn-menu */
+aside .btns-menu{padding: 10px 0; width: 65px;display: flex;align-items: center;gap:10px;flex-direction: column;}
+aside .btns-menu li{}
+aside .btns-menu li a{display: flex;align-items: center;gap:5px;flex-direction: column;text-align: center;font-size: 12px;height: 55px;}
+
+/* btn-menu-bar */
+aside .btn-menu-bar{width: 220px;display: flex;gap:15px;flex-direction: column;border-radius: 15px;}
+aside .btn-menu-bar > div:not(:first-of-type){padding-bottom: 15px;border-bottom: 1px solid #ddd;}
+aside .btns-menu-bar:hover{background: #ddd;}
+aside .btn-menu-bar > div ul {}
+
+aside .btn-menu-bar > div ul li {
+  width: 100%;
+}
+
+aside .btn-menu-bar > div ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  padding: 10px 10px;
+}
+
+
+
+
+aside .login{}
+aside .logout{}
+
+@media screen and (max-width:1200px) {
+
+
+}
+
+@media screen and (max-width:768px) {
+
+
+}
