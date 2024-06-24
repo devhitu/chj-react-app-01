@@ -1,21 +1,6 @@
 
 
 /* 메인 */
-main section {
-    height: 50vh;
-    font-size: 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-main section:nth-child(odd) {
-    background-color: #fff;
-}
-
-main section:nth-child(even) {
-    background-color: #ddd;
-}
 
 /* 메인제외 서브페이지 */
 .sub-wrap {

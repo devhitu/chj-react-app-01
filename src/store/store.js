@@ -1,7 +1,9 @@
 import create from 'zustand';
 
 const useStore = create((set) => ({
-  isAsideVisible: false, //초기상태 안보이는 상태
+  
+  // aside 메뉴 제어
+  isAsideVisible: false, //초기값
   toggleAside: () => set((state) => ({ isAsideVisible: !state.isAsideVisible })),
 }));
 
