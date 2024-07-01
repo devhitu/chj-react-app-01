@@ -36,7 +36,19 @@ aside .btn-menu-bar > div ul li a {display: flex;align-items: center;gap: 10px;f
 .filter-wrap ul li.on a{background: #000;color:#fff}
 
 .video-wrap{flex-wrap:wrap;display: flex;gap:30px}
-.video-wrap li{width: calc(25% - 30px);background: #00000062;}
+.video-wrap li{width: calc(25% - 30px);overflow: hidden;}
+.video-wrap li video{background: #00000062;}
+.video-wrap li .details{display: flex;gap: 10px;margin-top: 10px;}
+.video-wrap li .details .profile{width: 36px;height: 36px;border-radius: 50%;background-color: #ddd;}
+.video-wrap li .details .text{text-align: left;flex:1}
+.video-wrap li .details .text .title{overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2;-webkit-box-orient: vertical;font-size: 16px;color:#0f0f0f}
+.video-wrap li .details .text .name{font-size: 14px;color:#606060;margin: 5px auto;}
+.video-wrap li .details .text .view-date{display: flex;gap:5px;font-size: 14px;color:#606060}
+.video-wrap li .details .text .view-date .view{}
+.video-wrap li .details .text .view-date .date::before{content: "•"; margin-right: 5px;}
+.video-wrap li .details .text .view-date .date{position: relative;z-index: -1;}
+.video-wrap li .details .menu{}
+.video-wrap li .details .menu img {width: 24px;height: 24px;}
 
 
 @media screen and (max-width:1200px) {

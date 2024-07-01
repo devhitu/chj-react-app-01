@@ -9,6 +9,7 @@ import ZFormPage from './page/ZFormPage';
 import ZResultPage from './page/ZResultPage';
 import Number1 from './page/Number1';
 import Number2 from './page/Number2';
+import RestApiPage from './page/RestAPIiPage';
 
 export default function App(){
     return(
@@ -22,9 +23,11 @@ export default function App(){
                 <Route path="/ResultPage" element={<ResultPage />} />
                 <Route path="/ZFormPage" element={<ZFormPage />} />
                 <Route path="/ZResultPage" element={<ZResultPage />} />
-                
+
                 <Route path="/Number1" element={<Number1 />} />
                 <Route path="/Number2" element={<Number2 />} />
+                
+                <Route path="/RestApiPage" element={<RestApiPage />} />
             </Routes>
         </BrowserRouter>
         
