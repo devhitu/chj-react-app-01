@@ -7,35 +7,26 @@ import Footer from '../component/Footer';
 import HeaderSide from '../component/HeaderSide';
 
 export default function Home() {
-    const [isAsideVisible, setIsAsideVisible] = useState(false); // useState를 이용해 isAsideVisible 상태 추가
-
-    // Zustand를 통해 isAsideVisible 상태 동기화
+    // Zustand를 통해 상태와 액션 가져오기
+    const isAsideVisible = useStore((state) => state.isAsideVisible);
     const toggleAside = useStore((state) => state.toggleAside);
 
-    // isAsideVisible값 갱신
-    const isAsideVisibleFromZustand = useStore((state) => state.isAsideVisible);
-  
-    // Zustand의 isAsideVisible 상태가 변경될 때마다 로컬 상태 업데이트
-    useEffect(() => {
-      setIsAsideVisible(isAsideVisibleFromZustand);
-    }, [isAsideVisibleFromZustand]);
-  
     // toggleAside 함수를 이용한 handleToggleAside 함수 정의
     const handleToggleAside = () => {
-      toggleAside(); // Zustand의 toggleAside 상태 토글 함수 호출
+        toggleAside(); // Zustand의 toggleAside 액션 호출
     };
 
     const videos = [
-        { id: 1, videoSrc: 'video1.mp4', profileImgSrc: 'profile1.jpg', channelName: '멍플리1', views: '1000' },
-        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '멍플리2', views: '1500' },
-        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '멍플리3', views: '1500' },
-        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '멍플리4', views: '1500' },
-        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '멍플리5', views: '1500' },
-        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '멍플리6', views: '1500' },
-        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '멍플리7', views: '1500' },
-        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '멍플리8', views: '1500' },
-        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '멍플리9', views: '1500' },
-        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '멍플리10', views: '1500' },
+        { id: 1, videoSrc: 'video1.mp4', profileImgSrc: 'profile1.jpg', channelName: '비디오1', views: '1000' },
+        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '비디오2', views: '1500' },
+        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '비디오3', views: '1500' },
+        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '비디오4', views: '1500' },
+        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '비디오5', views: '1500' },
+        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '비디오6', views: '1500' },
+        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '비디오7', views: '1500' },
+        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '비디오8', views: '1500' },
+        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '비디오9', views: '1500' },
+        { id: 2, videoSrc: 'video2.mp4', profileImgSrc: 'profile2.jpg', channelName: '비디오10', views: '1500' },
     ];
     return (
         <>
@@ -43,8 +34,8 @@ export default function Home() {
             <Header />
             <div className="content-wrap">
                 <HeaderSide></HeaderSide>
-                <div className="">
-                <div className="filter-wrap">
+                <div className={`filter-video-wrap ${isAsideVisible ? 'wide-filter' : ''}`}>
+                <div className="filter-wrap" >
                     <ul>
                     <li className='on'><a href="">전체</a></li>
                     <li><a href="">음악</a></li>

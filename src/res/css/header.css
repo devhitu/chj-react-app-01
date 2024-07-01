@@ -27,6 +27,8 @@ aside .btn-menu-bar > div ul li a {display: flex;align-items: center;gap: 10px;f
 
 /* content-wrap */
 .content-wrap{position: fixed;width: 100%;top: 60px;display: flex;align-items: flex-start;}
+.filter-video-wrap{}
+.filter-video-wrap.wide-filter{width: calc(100% - 220px);}
 .filter-wrap{padding: 10px 30px;background: #fff;width: 100%;height: 55px;display: flex;align-items: center;}
 .filter-wrap ul{display: flex;gap:10px}
 .filter-wrap ul li{border-radius: 5px;}

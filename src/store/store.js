@@ -8,3 +8,12 @@ const useStore = create((set) => ({
 }));
 
 export default useStore;
+
+
+// toggleAside: function() {
+//   return set(function(state) { 이전상태를 받아와서
+//     return { 새로운 상태를 return
+//       isAsideVisible: !state.isAsideVisible
+//     };
+//   });
+// }
