@@ -55,6 +55,7 @@ export default function Home() {
                             {videos.map(video => (
                                 <li key={video.id}>
                                     <a href="#">
+                                        <iframe id="ytplayer" type="text/html" width="720" height="405"src="https://www.youtube.com/embed/M7lc1UVf-VE"frameborder="0" allowfullscreen></iframe>
                                         <video src={video.videoSrc}></video>
                                         <div className="details">
                                             <div className="profile"><img src={video.profileImgSrc} alt="" /></div>
