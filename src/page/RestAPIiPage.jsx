@@ -3,9 +3,6 @@ import axios from 'axios'
 import { useState } from "react";
 
 export default function RestApiPage(){
-    const [title, setTitle] = useState('');
-    const [useId, setUserId] = useState('');
-    const [id, setId] = useState('');
 
     const [todo, setTodo] = useState({}); //단일 => 객체
     const [todos, setTodos] = useState([]); //배열
@@ -51,8 +48,6 @@ export default function RestApiPage(){
                 <h5>userId {todos.userId}</h5>
                 <h5>id: {todos.id}</h5>                
             </div>
-
-
         </>
     )
 }
