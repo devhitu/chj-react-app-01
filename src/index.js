@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './res/font/font.css';
 import './res/css/reset.css';
-import './res/css/layout.css';
 import './res/css/common.css';
 import './res/css/header.css';
+import './res/css/main.css';
+import './res/css/sub.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

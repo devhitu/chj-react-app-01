@@ -3,7 +3,6 @@ import { useEffect, useState } from "react"
 
 import useStore from '../store/store';
 import Header from '../component/Header';
-import Footer from '../component/Footer';
 import HeaderSide from '../component/HeaderSide';
 import iconVerticalMenu from '../res/img/icons/icon_vertical_menu.svg';
 
@@ -77,7 +76,6 @@ export default function Home() {
                 </main>
                 </div>
             </div>            
-            <Footer />
         </>
     )
 }
