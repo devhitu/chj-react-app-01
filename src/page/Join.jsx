@@ -39,7 +39,21 @@ export default function Join() {
                                         <option value="">2</option>
                                     </select>
                                 </li>
-                                <li><input type="text" placeholder='월'/></li>
+                                <li>
+                                    <select name="" id="">
+                                        <option value="">일</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <select name="" id="">
+                                        <option value="">성별</option>
+                                        <option value="">여자</option>
+                                        <option value="">남자</option>
+                                        <option value="">공개안함</option>
+                                    </select>
+                                </li>
                             </ul>
                             <div className="btn-box"><button>다음</button></div>                            
                         </div>
@@ -74,7 +88,10 @@ export default function Join() {
                                 </li>
                                 <li>
                                     <input type="text" placeholder='확인'/>
-                                    <input type="checkbox" name="비밀번호 표시" id="" />
+                                    <label htmlFor="">
+                                        <input type="checkbox" name="" id="" />
+                                        <span>비밀번호 표시</span>
+                                    </label>
                                 </li>
                             </ul>
                             <div className="btn-box"><button>다음</button></div>                            
@@ -83,33 +100,37 @@ export default function Join() {
                         {/* 회원가입 STEP 5 */}
                         <div className="title-box">
                             <img src={iconGoogle} alt="" />
-                            <h1>계정정보 검토</h1>
+                            <h1>보안문자 입력</h1>
                         </div>                            
                         <div className="input-box">
                             <ul className="input-list type1">
-                                <li>
-                                    <p>이름정보</p>    
-                                    <p>이메일정보</p>    
+                                <li class="flex">
+                                    <select name="" id="">
+                                        <option value="">한국</option>
+                                    </select> 
+                                    <li>
+                                        <input type="text" placeholder='전화번호'/>
+                                    </li>                                 
+                                    <li>
+                                        <input type="text" placeholder='인증번호'/>
+                                    </li>                                 
                                 </li>
                             </ul>
                             <div className="btn-box"><button>다음</button></div>                            
                         </div>     
+
                         {/* 회원가입 STEP 6 */}
                         <div className="title-box">
                             <img src={iconGoogle} alt="" />
                             <h1>회원가입 완료</h1>
+                            <p>회원가입이 완료되었습니다.</p>
                         </div>                            
                         <div className="input-box">
+                            <ul className="input-list">
+                                <li>회원아이디 `아이디@gamil.com`</li>
+                            </ul>
                             <div className="btn-box"><button>Youtube로 이동하기</button></div>                            
                         </div>                                             
-
-                        {/* 원래는 핸드폰 인증까지 있는데, 생략후 로그인완료라고 하겠음 */}
-                        {/* 
-                            1. select 박스 디자인
-                            2. checkbox 디자인
-                            3.                        
-                        */}
-
                     </div>
                     <div className="language-box">
                         <select name="" id="">

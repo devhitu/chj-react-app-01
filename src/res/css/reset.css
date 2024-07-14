@@ -96,9 +96,9 @@ button {
 
 /* input 기본 스타일 초기화 */
 input {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
+	/* -webkit-appearance: none; */
+	/* -moz-appearance: none; */
+	/* appearance: none; */
 	border-width: 1px;
 	border-color: #ddd;
 	padding-inline: 0;
