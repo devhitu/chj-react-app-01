@@ -1,7 +1,35 @@
 import React from 'react';
 import iconGoogle from '../res/img/icons/icon_google.svg';
+import axios from 'axios';
+import { useState } from 'react';
 
 export default function Join() {
+    const [firstName, setFirstName] = useState('')
+    const onFirstName = (e) =>{
+        setFirstName(e.target.value)
+    }
+    
+    const requestSave = async () =>{
+
+        if(firstName.length==0){
+            alert('성을 기입해주세요.')
+            return;
+        }
+
+        var response =  await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save',null,{params:{
+            'f':firstName,
+            'l':'2',
+            'id':'3',
+            'pw':'4',
+            'g':'5',
+            'tel':'6',
+            'b':'7',
+            'nick':'8'
+        }});
+
+        alert(response.data);
+    }
+
     return (
         <>
             <div className='sub-wrap join'>
@@ -15,7 +43,7 @@ export default function Join() {
                         </div>
                         <div className="input-box">
                             <ul className="input-list type1">
-                                <li><input type="text" placeholder='성(선택사항)'/></li>
+                                <li><input type="text" placeholder='성(선택사항)' value={firstName} onChange={onFirstName}/></li>
                                 <li><input type="text" placeholder='이름'/></li>
                             </ul>
                             <div className="btn-box"><button>다음</button></div>                            
@@ -116,7 +144,7 @@ export default function Join() {
                                     </li>                                 
                                 </li>
                             </ul>
-                            <div className="btn-box"><button>다음</button></div>                            
+                            <div className="btn-box"><button onClick={requestSave}>가입하기</button></div>                            
                         </div>     
 
                         {/* 회원가입 STEP 6 */}
