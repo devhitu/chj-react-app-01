@@ -1,59 +1,51 @@
-import React, { useState } from 'react';
+import React from 'react';
 import iconGoogle from '../res/img/icons/icon_google.svg';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function Join() {
-    const navigate = useNavigate();  // useNavigate 훅 사용
+    // firstName
+    const [firstName, setFirstName] = useState('')
+    const onFirstName = (e) =>{
+        setFirstName(e.target.value)
+    }
+    // lasttName
+    const [lastName, setLastName] = useState('')
+    const onLastName = (e) =>{
+        setLastName(e.target.value)
+    }    
+    
+    const requestSave = async () =>{
 
-    const [currentStep, setCurrentStep] = useState(1);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-
-    const onFirstName = (e) => {
-        setFirstName(e.target.value);
-    };
-
-    const onLastName = (e) => {
-        setLastName(e.target.value);
-    };
-
-    const handleNextStep = async () => {
-        await requestSave();
-        setCurrentStep(6);
-    };
-
-    const requestSave = async () => {
-        if (firstName.length === 0) {
-            alert('성을 기입해주세요.');
+        if(firstName.length==0){
+            alert('성을 기입해주세요.')
             return;
         }
-        if (lastName.length === 0) {
-            alert('이름을 기입해주세요.');
+        if(lastName.length==0){
+            alert('이름을 기입해주세요.')
             return;
         }
 
-        var response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
-            params: {
-                f: firstName,
-                l: lastName,
-                id: '3',
-                pw: '4',
-                g: '5',
-                tel: '6',
-                b: '7',
-                nick: '8'
-            }
-        });
+        var response =  await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save',null,{params:{
+            'f':firstName,
+            'l':lastName,
+            'id':'3',
+            'pw':'4',
+            'g':'5',
+            'tel':'6',
+            'b':'7',
+            'nick':'8'
+        }});
 
-        alert(response.data); //ok
-    };
+        alert(response.data);
+    }
 
-    const renderStep = () => {
-        switch (currentStep) {
-            case 1:
-                return (
+    return (
+        <>
+            <div className='sub-wrap join'>
+                <div className="inner">
                     <div className="join-box">
+                        {/* 회원가입 STEP 1 */}
                         <div className="title-box">
                             <img src={iconGoogle} alt="" />
                             <h1>Google 계정 만들기</h1>
@@ -61,22 +53,16 @@ export default function Join() {
                         </div>
                         <div className="input-box">
                             <ul className="input-list type1">
-                                <li>
-                                    <input type="text" placeholder='성(선택사항)' value={firstName} onChange={onFirstName} />
-                                </li>
-                                <li>
-                                    <input type="text" placeholder='이름' value={lastName} onChange={onLastName} />
-                                </li>
+                                <li><input type="text" placeholder='성(선택사항)' value={firstName} onChange={onFirstName}/></li>
+                                <li><input type="text" placeholder='이름' value={lastName} onChange={onLastName}/></li>
                             </ul>
-                            <div className="btn-box">
-                                <button onClick={() => setCurrentStep(2)}>다음</button>
-                            </div>
+                            <div className="btn-box"><button>다음</button></div>                            
                         </div>
                     </div>
-                );
-            case 2:
-                return (
+
+
                     <div className="join-box">
+                        {/* 회원가입 STEP 2 */}
                         <div className="title-box">
                             <img src={iconGoogle} alt="" />
                             <h1>기본 정보</h1>
@@ -84,7 +70,7 @@ export default function Join() {
                         </div>
                         <div className="input-box">
                             <ul className="input-list type3">
-                                <li><input type="text" placeholder='연' /></li>
+                                <li><input type="text" placeholder='연'/></li>
                                 <li>
                                     <select name="" id="">
                                         <option value="">월</option>
@@ -108,15 +94,12 @@ export default function Join() {
                                     </select>
                                 </li>
                             </ul>
-                            <div className="btn-box">
-                                <button onClick={() => setCurrentStep(3)}>다음</button>
-                            </div>
+                            <div className="btn-box"><button>다음</button></div>
                         </div>
                     </div>
-                );
-            case 3:
-                return (
+                            
                     <div className="join-box">
+                        {/* 회원가입 STEP 3 */}
                         <div className="title-box">
                             <img src={iconGoogle} alt="" />
                             <h1>Gmail 주소 선택하기</h1>
@@ -125,25 +108,17 @@ export default function Join() {
                         <div className="input-box">
                             <ul className="input-list type1">
                                 <li>
-                                    <input type="text" placeholder='비밀번호'/>
-                                </li>
-                                <li>
-                                    <input type="text" placeholder='확인'/>
-                                    <label htmlFor="">
-                                        <input type="checkbox" name="" id="" />
-                                        <span>비밀번호 표시</span>
-                                    </label>
+                                    <p>내 Gmail 주소 만들기</p>
+                                    <input type="text" placeholder='Gmail 주소 만들기'/>
+                                    <p>문자, 숫자, 마침표를 사용할 수 있습니다.</p>
                                 </li>
                             </ul>
-                            <div className="btn-box">
-                                <button onClick={() => setCurrentStep(4)}>가입하기</button>
-                            </div>
+                            <div className="btn-box"><button>다음</button></div>
                         </div>
                     </div>
-                );
-            case 4:
-                return(
+
                     <div className="join-box">
+                        {/* 회원가입 STEP 4 */}
                         <div className="title-box">
                             <img src={iconGoogle} alt="" />
                             <h1>안전한 비밀번호 만들기</h1>
@@ -162,15 +137,12 @@ export default function Join() {
                                     </label>
                                 </li>
                             </ul>
-                            <div className="btn-box">
-                                <button onClick={() => setCurrentStep(5)}>가입하기</button>
-                            </div>
+                            <div className="btn-box"><button>다음</button></div>
                         </div>
-                    </div>                    
-                );
-            case 5:
-                return (
+                    </div>
+
                     <div className="join-box">
+                        {/* 회원가입 STEP 5 */}
                         <div className="title-box">
                             <img src={iconGoogle} alt="" />
                             <h1>보안문자 입력</h1>
@@ -189,15 +161,12 @@ export default function Join() {
                                     </li>
                                 </li>
                             </ul>
-                            <div className="btn-box">
-                                <button onClick={handleNextStep}>다음</button>
-                            </div>
+                            <div className="btn-box"><button onClick={requestSave}>가입하기</button></div>
                         </div>
                     </div>
-                );
-            case 6:
-                return (
+
                     <div className="join-box">
+                        {/* 회원가입 STEP 6 */}
                         <div className="title-box">
                             <img src={iconGoogle} alt="" />
                             <h1>회원가입 완료</h1>
@@ -207,27 +176,17 @@ export default function Join() {
                             <ul className="input-list">
                                 <li>회원아이디 `아이디@gamil.com`</li>
                             </ul>
-                            <div className="btn-box"> <button onClick={() => navigate('/main')}>Youtube로 이동하기</button></div>
+                            <div className="btn-box"><button>Youtube로 이동하기</button></div>
                         </div>
+                    </div>                                             
+                    <div className="language-box">
+                        <select name="" id="">
+                            <option value="">한국어</option>
+                            <option value="">English</option>
+                        </select>
                     </div>
-                );
-
-            default:
-                return null;
-        }
-    };
-
-    return (
-        <div className='sub-wrap join'>
-            <div className="inner">
-                {renderStep()}
-                <div className="language-box">
-                    <select name="" id="">
-                        <option value="">한국어</option>
-                        <option value="">English</option>
-                    </select>
                 </div>
             </div>
-        </div>
-    );
+        </>
+    )
 }
