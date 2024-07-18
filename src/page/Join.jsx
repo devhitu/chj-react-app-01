@@ -18,10 +18,23 @@ export default function Join() {
         setLastName(e.target.value);
     };
 
+    //enter key press go next steps
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            // 현재 단계가 마지막 단계가 아닌 경우에만 다음 단계로 이동
+            if (currentStep < 6) {
+                setCurrentStep(currentStep + 1);
+            }
+        }
+    };
+
+
     const handleNextStep = async () => {
         await requestSave();
         setCurrentStep(6);
     };
+
+
 
     const requestSave = async () => {
         if (firstName.length === 0) {
@@ -65,11 +78,12 @@ export default function Join() {
                                     <input type="text" placeholder='성(선택사항)' value={firstName} onChange={onFirstName} />
                                 </li>
                                 <li>
-                                    <input type="text" placeholder='이름' value={lastName} onChange={onLastName} />
+                                    <input type="text" placeholder='이름' value={lastName} onChange={onLastName} onKeyPress={handleKeyPress} />
                                 </li>
                             </ul>
                             <div className="btn-box">
-                                <button onClick={() => setCurrentStep(2)}>다음</button>
+                                <button onClick={() => setCurrentStep(currentStep + 1)}>다음</button>
+                            
                             </div>
                         </div>
                     </div>
@@ -109,7 +123,10 @@ export default function Join() {
                                 </li>
                             </ul>
                             <div className="btn-box">
+                                {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>뒤로</button>}   
+                                                                
                                 <button onClick={() => setCurrentStep(3)}>다음</button>
+
                             </div>
                         </div>
                     </div>
@@ -136,6 +153,7 @@ export default function Join() {
                                 </li>
                             </ul>
                             <div className="btn-box">
+                                {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>뒤로</button>}   
                                 <button onClick={() => setCurrentStep(4)}>가입하기</button>
                             </div>
                         </div>
@@ -163,6 +181,7 @@ export default function Join() {
                                 </li>
                             </ul>
                             <div className="btn-box">
+                                {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>뒤로</button>}   
                                 <button onClick={() => setCurrentStep(5)}>가입하기</button>
                             </div>
                         </div>
@@ -190,6 +209,7 @@ export default function Join() {
                                 </li>
                             </ul>
                             <div className="btn-box">
+                                {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>뒤로</button>}   
                                 <button onClick={handleNextStep}>다음</button>
                             </div>
                         </div>
