@@ -64,49 +64,50 @@ export default function Join() {
     
     const daysInMonth = (year, month) => {
         //new Date(2024,4,0) => 24.5월의 마지막 날 반환
-        return new Date(year, month).getDate(); 
+        return new Date(year, month - 1, 0).getDate();
     };
     
     const currentYear = new Date().getFullYear();
-    const regex = new RegExp(`^(19[0-9]{2}|20[0-${currentYear - 2000}])$`);
-    
+
     const handleYearChange = (e) => {
-        const inputYear = e.target.value; // 입력한 연도
-        if (regex.test(inputYear)) {
-            setYear(inputYear); // 연도 설정
-            if (month) { // 사용자가 월을 선택했을 때만 실행
-                const days = daysInMonth(inputYear, month); // 해당 연도와 월의 마지막 날짜 계산
-                if (day > days) {
-                    setDay(''); // 선택된 일자 초기화
-                }
-            }
-        } else {
-            alert('올바른 연도를 입력해주세요.');
-        }
+        const inputYear = e.target.value.trim(); // 입력한 연도, trim()으로 앞뒤 공백 제거
+        setYear(inputYear); // 입력한 연도 설정
     };
+
+
     const handleMonthChange = (e) => {
         const selectedMonth = parseInt(e.target.value);
-        setMonth(selectedMonth);
-        // 현재 선택된 연도를 가져와서 해당 월의 일수를 계산
-        if (year) {
-            const days = daysInMonth(year, selectedMonth);
-            // 현재 선택된 일자가 유효하지 않으면 초기화
-            if (day > days) {
-                setDay('');
-            }
+        setMonth(selectedMonth); // 선택한 월 설정
+        
+        // 사용자가 연도를 입력하지 않았거나 유효하지 않은 연도인 경우
+        if (!year || year < 1900 || year > currentYear) {
+            alert('올바른 연도를 입력해주세요.'); // 알림 표시
+            setYear(''); // 연도 초기화
+            return;
+        }
+        
+        const days = daysInMonth(year, selectedMonth); // 해당 연도와 월의 마지막 날짜 계산
+        if (day > days) {
+            setDay(''); // 선택된 일자 초기화
         }
     };
+    // 연도와 월에 따라 동적으로 일자 선택 옵션 렌더링 => 입력에 따라서 비교X, 입력후 월을 고를때 올바른 년도인지 판별!!
 
     const renderDays = () => {
         if (!year || !month) {
             return <option value="">일</option>;
         }
-        const days = daysInMonth(year, month);
-        return Array.from({ length: days }, (_, i) => i + 1).map((day) => (
-            <option key={day} value={day}>
-                {day}
-            </option>
-        ));
+    
+        const daysInSelectedMonth = daysInMonth(parseInt(year), parseInt(month) - 1);
+        
+        return Array.from({ length: daysInSelectedMonth }, (_, index) => {
+            const dayValue = index + 1;
+            return (
+                <option key={dayValue} value={dayValue}>
+                    {dayValue}
+                </option>
+            );
+        });
     };
 
     //다음단계 버튼 클릭
@@ -133,7 +134,7 @@ export default function Join() {
             return;
         }
 
-        var response = await axios.post('', null, {
+        var response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
             params: {
                 f: firstName,
                 l: lastName,
