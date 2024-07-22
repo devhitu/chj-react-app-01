@@ -9,6 +9,14 @@ export default function Join() {
     const [currentStep, setCurrentStep] = useState(1);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [birth, setBirth] = useState('');
+    // const [year, setYear] = useState('');
+    // const [month, setMonth] = useState('');
+    // const [day, setDay] = useState('');
+    const [gender, setGender] = useState('');
+    const [id, setId] = useState('');
+    const [pw, setPw] = useState('');
+    const [tel, setTel] = useState('');
 
     const onFirstName = (e) => {
         setFirstName(e.target.value);
@@ -35,6 +43,8 @@ export default function Join() {
     };
 
 
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
 
     const requestSave = async () => {
         if (firstName.length === 0) {
@@ -50,11 +60,11 @@ export default function Join() {
             params: {
                 f: firstName,
                 l: lastName,
-                id: '3',
-                pw: '4',
-                g: '5',
-                tel: '6',
-                b: '7',
+                id: id,
+                pw: pw,
+                g: gender,
+                tel: tel,
+                b: birth,
                 nick: '8'
             }
         });
@@ -98,12 +108,15 @@ export default function Join() {
                         </div>
                         <div className="input-box">
                             <ul className="input-list type3">
-                                <li><input type="text" placeholder='연' /></li>
+                                <li><input type="text" placeholder='연' value={year} /></li>
                                 <li>
-                                    <select name="" id="">
+                                    <select name="month" id="">
                                         <option value="">월</option>
-                                        <option value="">1</option>
-                                        <option value="">2</option>
+                                        {months.map((month) => (
+                                            <option key={month} value={month}>
+                                                {month}
+                                            </option>
+                                        ))}
                                     </select>
                                 </li>
                                 <li>
@@ -142,15 +155,9 @@ export default function Join() {
                         <div className="input-box">
                             <ul className="input-list type1">
                                 <li>
-                                    <input type="text" placeholder='비밀번호'/>
+                                    <input type="text" placeholder=''/>
                                 </li>
-                                <li>
-                                    <input type="text" placeholder='확인'/>
-                                    <label htmlFor="">
-                                        <input type="checkbox" name="" id="" />
-                                        <span>비밀번호 표시</span>
-                                    </label>
-                                </li>
+                                
                             </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>뒤로</button>}   
