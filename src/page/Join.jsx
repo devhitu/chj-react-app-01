@@ -5,15 +5,17 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Join() {
     const navigate = useNavigate();  // useNavigate 훅 사용
-
     const [currentStep, setCurrentStep] = useState(1);
+    
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    
     const [birth, setBirth] = useState('');
-    // const [year, setYear] = useState('');
-    // const [month, setMonth] = useState('');
-    // const [day, setDay] = useState('');
+    const [year, setYear] = useState('');
+    const [month, setMonth] = useState('');
+    const [day, setDay] = useState('');
     const [gender, setGender] = useState('');
+    
     const [id, setId] = useState('');
     const [pw, setPw] = useState('');
     const [tel, setTel] = useState('');
@@ -26,37 +28,112 @@ export default function Join() {
         setLastName(e.target.value);
     };
 
-    //enter key press go next steps
+    // const onYearChange = (e) => {
+    //     setYear(e.target.value);
+    // };
+    
+    const onMonthChange = (e) => {
+        setMonth(e.target.value);
+    };
+    
+    const onDayChange = (e) => {
+        setDay(e.target.value);
+    };
+    
+    const onGenderChange = (e) => {
+        setGender(e.target.value);
+    };
+
+
+
+    //월, 일 계산
+    const Months = [
+        { value: 1, label: '1월' },
+        { value: 2, label: '2월' },
+        { value: 3, label: '3월' },
+        { value: 4, label: '4월' },
+        { value: 5, label: '5월' },
+        { value: 6, label: '6월' },
+        { value: 7, label: '7월' },
+        { value: 8, label: '8월' },
+        { value: 9, label: '9월' },
+        { value: 10, label: '10월' },
+        { value: 11, label: '11월' },
+        { value: 12, label: '12월' }
+    ];
+    
+    const daysInMonth = (year, month) => {
+        //new Date(2024,4,0) => 24.5월의 마지막 날 반환
+        return new Date(year, month).getDate(); 
+    };
+    
+    const currentYear = new Date().getFullYear();
+    const regex = new RegExp(`^(19[0-9]{2}|20[0-${currentYear - 2000}])$`);
+    
+    const handleYearChange = (e) => {
+        const inputYear = e.target.value; // 입력한 연도
+        if (regex.test(inputYear)) {
+            setYear(inputYear); // 연도 설정
+            if (month) { // 사용자가 월을 선택했을 때만 실행
+                const days = daysInMonth(inputYear, month); // 해당 연도와 월의 마지막 날짜 계산
+                if (day > days) {
+                    setDay(''); // 선택된 일자 초기화
+                }
+            }
+        } else {
+            alert('올바른 연도를 입력해주세요.');
+        }
+    };
+    const handleMonthChange = (e) => {
+        const selectedMonth = parseInt(e.target.value);
+        setMonth(selectedMonth);
+        // 현재 선택된 연도를 가져와서 해당 월의 일수를 계산
+        if (year) {
+            const days = daysInMonth(year, selectedMonth);
+            // 현재 선택된 일자가 유효하지 않으면 초기화
+            if (day > days) {
+                setDay('');
+            }
+        }
+    };
+
+    const renderDays = () => {
+        if (!year || !month) {
+            return <option value="">일</option>;
+        }
+        const days = daysInMonth(year, month);
+        return Array.from({ length: days }, (_, i) => i + 1).map((day) => (
+            <option key={day} value={day}>
+                {day}
+            </option>
+        ));
+    };
+
+    //다음단계 버튼 클릭
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            // 현재 단계가 마지막 단계가 아닌 경우에만 다음 단계로 이동
-            if (currentStep < 6) {
+            if (currentStep < 6) { //마지막단계 아닐경우만 
                 setCurrentStep(currentStep + 1);
             }
         }
     };
 
-
     const handleNextStep = async () => {
         await requestSave();
         setCurrentStep(6);
-    };
-
-
-    const months = Array.from({ length: 12 }, (_, i) => i + 1);
-
+    };    
 
     const requestSave = async () => {
-        if (firstName.length === 0) {
-            alert('성을 기입해주세요.');
-            return;
-        }
+        // if (firstName.length === 0) {
+        //     alert('성을 기입해주세요.');
+        //     return;
+        // }
         if (lastName.length === 0) {
             alert('이름을 기입해주세요.');
             return;
         }
 
-        var response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
+        var response = await axios.post('', null, {
             params: {
                 f: firstName,
                 l: lastName,
@@ -107,34 +184,33 @@ export default function Join() {
                             <p>생일과 성별을 입력하세요</p>
                         </div>
                         <div className="input-box">
-                            <ul className="input-list type3">
-                                <li><input type="text" placeholder='연' value={year} /></li>
-                                <li>
-                                    <select name="month" id="">
-                                        <option value="">월</option>
-                                        {months.map((month) => (
-                                            <option key={month} value={month}>
-                                                {month}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </li>
-                                <li>
-                                    <select name="" id="">
-                                        <option value="">일</option>
-                                        <option value="">1</option>
-                                        <option value="">2</option>
-                                    </select>
-                                </li>
-                                <li>
-                                    <select name="" id="">
-                                        <option value="">성별</option>
-                                        <option value="">여자</option>
-                                        <option value="">남자</option>
-                                        <option value="">공개안함</option>
-                                    </select>
-                                </li>
-                            </ul>
+                        <ul className="input-list type3">
+                            <li><input type="text" placeholder='연' value={year} onChange={handleYearChange} /></li>
+                            <li>
+                                <select value={month} onChange={handleMonthChange}>
+                                    <option value="">월</option>
+                                    {Months.map((m) => (
+                                        <option key={m.value} value={m.value}>
+                                            {m.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </li>
+                            <li>
+                                <select value={day} onChange={(e) => setDay(parseInt(e.target.value))}>
+                                    <option value="">일</option>
+                                    {renderDays()}
+                                </select>
+                            </li>
+                            <li>
+                                <select name="" id="" value={gender} onChange={onGenderChange}>
+                                    <option value="">성별</option>
+                                    <option value="여자">여자</option>
+                                    <option value="남자">남자</option>
+                                    <option value="공개안함">공개안함</option>
+                                </select>
+                            </li>
+                        </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>뒤로</button>}   
                                                                 
