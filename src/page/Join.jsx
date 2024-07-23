@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import iconGoogle from '../res/img/icons/icon_google.svg';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function Join() {
     const navigate = useNavigate();  // useNavigate 훅 사용
+    const { step } = useParams(); //step별 파라미터 사용
+
     const [currentStep, setCurrentStep] = useState(1);
     
     const [firstName, setFirstName] = useState('');
@@ -24,22 +26,12 @@ export default function Join() {
         setFirstName(e.target.value);
     };
 
+
     const onLastName = (e) => {
         setLastName(e.target.value);
     };
 
-    // const onYearChange = (e) => {
-    //     setYear(e.target.value);
-    // };
-    
-    const onMonthChange = (e) => {
-        setMonth(e.target.value);
-    };
-    
-    const onDayChange = (e) => {
-        setDay(e.target.value);
-    };
-    
+
     const onGenderChange = (e) => {
         setGender(e.target.value);
     };
@@ -62,10 +54,23 @@ export default function Join() {
         { value: 12, label: '12월' }
     ];
     
-    const daysInMonth = (year, month) => {
-        //new Date(2024,4,0) => 24.5월의 마지막 날 반환
-        return new Date(year, month - 1, 0).getDate();
+    const isLeapYear = (year) => {
+        // 4로 나누어 떨어지지만, 100으로 나누어 떨어지지 않거나 400으로 나누어 떨어지는 연도는 윤년
+        return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
     };
+    
+    const daysInMonth = (year, month) => {
+        // JavaScript의 Date 객체는 월 인덱스가 0부터 시작하므로 month에서 1을 빼줍니다.
+        const daysInMonth = new Date(year, month, 0).getDate();
+    
+        // 윤년이면서 2월인 경우, 일 수를 29일로 수정
+        if (month === 2 && isLeapYear(year)) {
+            return 29;
+        }
+        
+        return daysInMonth;
+    };
+    
     
     const currentYear = new Date().getFullYear();
 
@@ -91,63 +96,106 @@ export default function Join() {
             setDay(''); // 선택된 일자 초기화
         }
     };
+    
     // 연도와 월에 따라 동적으로 일자 선택 옵션 렌더링 => 입력에 따라서 비교X, 입력후 월을 고를때 올바른 년도인지 판별!!
-
     const renderDays = () => {
         if (!year || !month) {
             return <option value="">일</option>;
         }
     
-        const daysInSelectedMonth = daysInMonth(parseInt(year), parseInt(month) - 1);
+        const daysInSelectedMonth = daysInMonth(parseInt(year), parseInt(month));
         
         return Array.from({ length: daysInSelectedMonth }, (_, index) => {
             const dayValue = index + 1;
             return (
                 <option key={dayValue} value={dayValue}>
-                    {dayValue}
+                    {dayValue}일
                 </option>
             );
         });
     };
 
+    const onId = (e) => {
+        const inputValue = e.target.value;
+        const pattern = /^(?=.*[a-zA-Z])(?=.*\d).+$/; // 영문자와 숫자가 적어도 한 번 이상 포함되어야 함
+    
+        if (pattern.test(inputValue)) {
+            setId(inputValue);
+        } else {
+            // 아이디 조건에 맞지 않는 경우 처리 (예: 경고 메시지 등)
+            alert('아이디는 영문자와 숫자의 조합이어야 합니다.');
+        }
+    };
+
     //다음단계 버튼 클릭
-    const handleKeyPress = (e) => {
+    const handleKeyPress = async (e) => {
         if (e.key === 'Enter') {
-            if (currentStep < 6) { //마지막단계 아닐경우만 
-                setCurrentStep(currentStep + 1);
+            e.preventDefault(); // 기본 동작을 막음
+            
+            // 연, 월, 일 값을 합쳐서 birth 문자열 생성
+            const birth = `${year}-${month}-${day}`;
+    
+            // API 호출 후 다음 단계로 이동
+            try {
+                await requestSave(birth); // birth 값을 requestSave 함수에 전달
+    
+                if (currentStep < 6) {
+                    setCurrentStep(currentStep + 1);
+                    navigate(`/join/step${currentStep + 1}`);
+                }
+            } catch (error) {
+                console.error('Error saving user:', error);
+                // 에러 처리 로직 추가
             }
         }
     };
 
     const handleNextStep = async () => {
-        await requestSave();
-        setCurrentStep(6);
+        // 연, 월, 일 값을 합쳐서 birth 문자열 생성
+        const birth = `${year}-${month}-${day}`;
+
+        // API 호출
+        try {
+            await requestSave(birth); // birth 값을 requestSave 함수에 전달
+            setCurrentStep(6); // 다음 단계로 이동
+            navigate(`/join/step${currentStep + 1}`);
+        } catch (error) {
+            console.error('Error saving user:', error);
+            // 에러 처리 로직 추가
+        }
     };    
+    
+    //이전단계 버튼 클릭
+    const handlePrevStep = () => {
+        const prevStep = currentStep - 1;
+        setCurrentStep(prevStep < 1 ? 1 : prevStep); // 최소 단계는 1로 설정
+        navigate(`/join/step${prevStep}`);
+    };  
 
     const requestSave = async () => {
-        // if (firstName.length === 0) {
-        //     alert('성을 기입해주세요.');
-        //     return;
-        // }
         if (lastName.length === 0) {
             alert('이름을 기입해주세요.');
             return;
         }
 
-        var response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
-            params: {
-                f: firstName,
-                l: lastName,
-                id: id,
-                pw: pw,
-                g: gender,
-                tel: tel,
-                b: birth,
-                nick: '8'
-            }
-        });
+        try {
+            const response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
+                params: {
+                    f: firstName,
+                    l: lastName,
+                    id: id,
+                    pw: pw,
+                    g: gender,
+                    tel: tel,
+                    b: birth,
+                    nick: '8'
+                }
+            });
+            alert(response.data); //ok
+        }catch(error){
+            console.error('Error saving user:', error);
+        }
 
-        alert(response.data); //ok
     };
 
     const renderStep = () => {
@@ -213,7 +261,7 @@ export default function Join() {
                             </li>
                         </ul>
                             <div className="btn-box">
-                                {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>뒤로</button>}   
+                                {currentStep > 1 && <button onClick={() => handlePrevStep(2)}>뒤로</button>}   
                                                                 
                                 <button onClick={() => setCurrentStep(3)}>다음</button>
 
@@ -232,12 +280,11 @@ export default function Join() {
                         <div className="input-box">
                             <ul className="input-list type1">
                                 <li>
-                                    <input type="text" placeholder=''/>
+                                    <input type="text" placeholder='주소를 적어주세요' value={id} onChange={onId} onKeyPress={handleKeyPress}/>
                                 </li>
-                                
                             </ul>
                             <div className="btn-box">
-                                {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>뒤로</button>}   
+                                {currentStep > 1 && <button onClick={() => handlePrevStep(3)}>뒤로</button>}   
                                 <button onClick={() => setCurrentStep(4)}>가입하기</button>
                             </div>
                         </div>
@@ -265,7 +312,7 @@ export default function Join() {
                                 </li>
                             </ul>
                             <div className="btn-box">
-                                {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>뒤로</button>}   
+                                {currentStep > 1 && <button onClick={() => handlePrevStep(4)}>뒤로</button>}   
                                 <button onClick={() => setCurrentStep(5)}>가입하기</button>
                             </div>
                         </div>
@@ -293,7 +340,7 @@ export default function Join() {
                                 </li>
                             </ul>
                             <div className="btn-box">
-                                {currentStep > 1 && <button onClick={() => setCurrentStep(currentStep - 1)}>뒤로</button>}   
+                                {currentStep > 1 && <button onClick={() => handlePrevStep(5)}>뒤로</button>}   
                                 <button onClick={handleNextStep}>다음</button>
                             </div>
                         </div>

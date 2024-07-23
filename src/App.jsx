@@ -11,7 +11,7 @@ export default function App(){
                 {/* dasd */}
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/join" element={<Join />} />
+                <Route path="/join/:step" element={<Join />} />
             </Routes>
         </BrowserRouter>
         
