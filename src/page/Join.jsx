@@ -19,7 +19,12 @@ export default function Join() {
     const [gender, setGender] = useState('');
     
     const [id, setId] = useState('');
+    const [isIdValid, setIsIdValid] = useState(true); // 아이디 유효성 검사 결과 상태    
+
     const [pw, setPw] = useState('');
+    const [confirmPw, setConfirmPw] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // 비밀번호 보기 여부 상태
+
     const [tel, setTel] = useState('');
 
     const onFirstName = (e) => {
@@ -115,22 +120,63 @@ export default function Join() {
         });
     };
 
+    //id
+    const validateId = (inputValue) => {
+        const pattern = /^(?=.*[a-zA-Z])(?=.*\d).+$/; // 영문자와 숫자가 적어도 한 번 이상 포함되어야 함
+        return pattern.test(inputValue);
+    };
+
     const onId = (e) => {
         const inputValue = e.target.value;
-        const pattern = /^(?=.*[a-zA-Z])(?=.*\d).+$/; // 영문자와 숫자가 적어도 한 번 이상 포함되어야 함
-    
-        if (pattern.test(inputValue)) {
-            setId(inputValue);
-        } else {
-            // 아이디 조건에 맞지 않는 경우 처리 (예: 경고 메시지 등)
+        setId(inputValue);
+    };
+
+    const onBlurIdInput = () => {
+        const isValid = validateId(id);
+
+        setIsIdValid(isValid);
+
+        // 1차시도 후 불통일때 false(이전true)
+        //isValid가 false일 때 (즉, 유효하지 않은 아이디일 때) && isIdValid가 true일 때 (즉, 이전에 유효한 아이디였을 때)
+        if (!isValid && isIdValid) { //한번만 알럿을 띄운다
             alert('아이디는 영문자와 숫자의 조합이어야 합니다.');
         }
+    };
+
+
+    const onPw = (e) => {
+        const inputValue = e.target.value;
+        const pattern = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/; // 영문자와 숫자가 적어도 한 번 이상 포함, 8자 이상 되어야 함
+    
+        if (pattern.test(inputValue)) { // 비밀번호가 조건을 충족할 경우
+            setPw(inputValue); 
+        } else {
+            alert('비밀번호는 8자 이상의 영문자와 숫자의 조합이어야 합니다.');
+        }
+    };
+
+    const onConfirmPw = (e) => {
+        const inputValue = e.target.value;
+        setConfirmPw(inputValue);
+        checkPasswordMatch(pw, inputValue);
+    };
+
+    const checkPasswordMatch = (password, confirmPassword) => {
+        if (password !== confirmPassword) {
+            alert('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+        }
+    };
+
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword); // showPassword 상태를 토글
     };
 
     //다음단계 버튼 클릭
     const handleKeyPress = async (e) => {
         if (e.key === 'Enter') {
             e.preventDefault(); // 기본 동작을 막음
+
+            onBlurIdInput(); // id판별은 포커스가 벗어났을 때와 동일한 동작을 수행
             
             // 연, 월, 일 값을 합쳐서 birth 문자열 생성
             const birth = `${year}-${month}-${day}`;
@@ -279,8 +325,15 @@ export default function Join() {
                         </div>
                         <div className="input-box">
                             <ul className="input-list type1">
-                                <li>
-                                    <input type="text" placeholder='주소를 적어주세요' value={id} onChange={onId} onKeyPress={handleKeyPress}/>
+                            <li>
+                                    <input
+                                        type="text"
+                                        placeholder='주소를 적어주세요'
+                                        value={id}
+                                        onChange={onId}
+                                        onBlur={onBlurIdInput} // 포커스가 아이디 입력 필드를 벗어났을 때 검사 수행
+                                        onKeyPress={handleKeyPress}
+                                    />
                                 </li>
                             </ul>
                             <div className="btn-box">
@@ -301,12 +354,12 @@ export default function Join() {
                         <div className="input-box">
                             <ul className="input-list type1">
                                 <li>
-                                    <input type="text" placeholder='비밀번호'/>
+                                    <input type={showPassword ? 'text' : 'password'} placeholder='비밀번호' value={pw} onChange={onPw} />
                                 </li>
                                 <li>
-                                    <input type="text" placeholder='확인'/>
-                                    <label htmlFor="">
-                                        <input type="checkbox" name="" id="" />
+                                    <input type={showPassword ? 'text' : 'password'} placeholder='확인' value={confirmPw} onChange={onConfirmPw} />
+                                    <label htmlFor="showPasswordCheckbox">
+                                        <input type="checkbox" id="showPasswordCheckbox" onChange={toggleShowPassword} />
                                         <span>비밀번호 표시</span>
                                     </label>
                                 </li>
