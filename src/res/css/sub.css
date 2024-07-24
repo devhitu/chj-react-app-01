@@ -9,6 +9,7 @@
 .sub-wrap.join .join-box .input-box{width: 400px;}
 .sub-wrap.join .join-box .input-box .input-list{display: flex;gap:24px 16px;margin-bottom: 50px;flex-wrap: wrap;}
 .sub-wrap.join .join-box .input-box .input-list input[type="text"],
+.sub-wrap.join .join-box .input-box .input-list input[type="password"],
 .sub-wrap.join .join-box .input-box .input-list select{border-radius: 5px;padding: 12px 14px;height: 50px;width: 100%;}
 .sub-wrap.join .join-box .input-box .btn-box{display: flex;justify-content: flex-end;}
 .sub-wrap.join .join-box .input-box .btn-box button{background: #0b57d0;color:#fff;border-radius: 30px;line-height: 48px;font-size: 14px;padding: 0 26px}

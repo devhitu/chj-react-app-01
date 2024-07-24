@@ -23,7 +23,6 @@ export default function Join() {
 
     const [pw, setPw] = useState('');
     const [confirmPw, setConfirmPw] = useState('');
-    const [isPwValid, setIsPwValid] = useState(true); // 아이디 유효성 검사 결과 상태    
     const [showPassword, setShowPassword] = useState(false);
 
     const [tel, setTel] = useState('');
@@ -32,11 +31,19 @@ export default function Join() {
         setFirstName(e.target.value);
     };
 
+
     const onLastName = (e) => {
         setLastName(e.target.value);
     };
 
-    //step2 월, 일 계산
+
+    const onGenderChange = (e) => {
+        setGender(e.target.value);
+    };
+
+
+
+    //월, 일 계산
     const Months = [
         { value: 1, label: '1월' },
         { value: 2, label: '2월' },
@@ -113,12 +120,7 @@ export default function Join() {
         });
     };
 
-    // step2 성별선택
-    const onGenderChange = (e) => {
-        setGender(e.target.value);
-    };
-
-    // step3 주소 입력
+    //id
     const validateId = (inputValue) => {
         const pattern = /^(?=.*[a-zA-Z])(?=.*\d).+$/; // 영문자와 숫자가 적어도 한 번 이상 포함되어야 함
         return pattern.test(inputValue);
@@ -129,32 +131,29 @@ export default function Join() {
         setId(inputValue);
     };
 
-    // step3, step4 주소, 비밀번호 유효성 검사
     const onBlurIdInput = () => {
         const isValid = validateId(id);
-        const idValid2 = validatePw(pw);
 
         setIsIdValid(isValid);
-        setIsPwValid(idValid2);
 
-        // 1차시도 후 불통일때 false(이전true) 한번만 알럿을 띄운다
-        // isValid가 false일 때 (즉, 유효하지 않은 아이디일 때) && isIdValid가 true일 때 (즉, 이전에 유효한 아이디였을 때)
-        if (!isValid && isIdValid) {
+        // 1차시도 후 불통일때 false(이전true)
+        //isValid가 false일 때 (즉, 유효하지 않은 아이디일 때) && isIdValid가 true일 때 (즉, 이전에 유효한 아이디였을 때)
+        if (!isValid && isIdValid) { //한번만 알럿을 띄운다
             alert('아이디는 영문자와 숫자의 조합이어야 합니다.');
         }
-        if (!idValid2 && isPwValid) {
-            alert('비밀번호는 8자 이상의 영문자와 숫자의 조합이어야 합니다.');
-        }
     };
 
-    // step4 비밀번호 입력
-    const validatePw = (inputValue) => {
-        const pattern = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/; // 영문자와 숫자가 적어도 한 번 이상 포함, 8자 이상 되어야 함
-        return pattern.test(inputValue);
-    };
-    const onPw = (e) => {
+
+    const onPwChange = (e) => {
         const inputValue = e.target.value;
-        setPw(inputValue);
+        const pattern = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/; // 영문자와 숫자가 적어도 한 번 이상 포함, 8자 이상 되어야 함
+    
+        if (pattern.test(inputValue)) {
+            setPw(inputValue);
+        } else {
+            setPw('');
+            alert('비밀번호는 8자 이상의 영문자와 숫자의 조합이어야 합니다.');
+        }
     };
 
     const onConfirmPwChange = (e) => {
@@ -162,26 +161,19 @@ export default function Join() {
         setConfirmPw(inputValue);
     };
 
+;
+
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
-
-    // step5 핸드폰 인증
-
 
     //다음단계 버튼 클릭
     const handleKeyPress = async (e) => {
         if (e.key === 'Enter') {
             e.preventDefault(); // 기본 동작을 막음
 
-            // step2 연, 월, 일 값을 합쳐서 birth 문자열 생성
+            // 연, 월, 일 값을 합쳐서 birth 문자열 생성
             const birth = `${year}-${month}-${day}`;
-
-            // step6 비밀번호 확인
-            if (pw !== confirmPw) {
-                alert('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
-                return;
-            }            
     
             // API 호출 후 다음 단계로 이동
             try {
@@ -232,17 +224,33 @@ export default function Join() {
             alert('이름을 기입해주세요.');
             return;
         }
+        if (id.length === 0) {
+            alert('주소를 기입해주세요.');
+            return;
+        }
+        if (gender.length === 0) {
+            alert('성별을 선택해주세요.');
+            return;
+        }
+        if (pw.length === 0) {
+            alert('비밀번호를 기입해주세요.');
+            return;
+        }
+        if (tel.length === 0) {
+            alert('연락처를 기입해주세요.');
+            return;
+        }
 
         try {
             const response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
                 params: {
                     f: firstName,
                     l: lastName,
+                    b: birth,
+                    g: gender,
                     id: id,
                     pw: pw,
-                    g: gender,
                     tel: tel,
-                    b: birth,
                     nick: '8'
                 }
             });
@@ -250,7 +258,6 @@ export default function Join() {
         }catch(error){
             console.error('Error saving user:', error);
         }
-
     };
 
     const renderStep = () => {
@@ -273,8 +280,7 @@ export default function Join() {
                                 </li>
                             </ul>
                             <div className="btn-box">
-                                <button onClick={() => setCurrentStep(currentStep + 1)}>다음</button>
-                            
+                                <button onClick={() => setCurrentStep(2)}>다음</button>
                             </div>
                         </div>
                     </div>
@@ -317,7 +323,7 @@ export default function Join() {
                         </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => handlePrevStep()}>뒤로</button>}   
-                                <button onClick={() => setCurrentStep(currentStep + 1)}>다음</button>
+                                <button onClick={() => setCurrentStep()}>다음</button>
                             </div>
                         </div>
                     </div>
@@ -345,7 +351,7 @@ export default function Join() {
                             </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => handlePrevStep()}>뒤로</button>}   
-                                <button onClick={() => setCurrentStep(currentStep + 1)}>가입하기</button>
+                                <button onClick={() => setCurrentStep()}>가입하기</button>
                             </div>
                         </div>
                     </div>
@@ -361,14 +367,7 @@ export default function Join() {
                         <div className="input-box">
                             <ul className="input-list type1">
                                 <li>
-                                    <input 
-                                        type={showPassword ? 'text' : 'password'} 
-                                        placeholder='비밀번호' 
-                                        value={pw} 
-                                        onChange={onPw} 
-                                        onBlur={onBlurIdInput} // 포커스가 아이디 입력 필드를 벗어났을 때 검사 수행
-                                        onKeyPress={handleKeyPress}
-                                    />
+                                    <input type={showPassword ? 'text' : 'password'} placeholder='비밀번호' value={pw} onChange={onPwChange} />
                                 </li>
                                 <li>
                                     <input type={showPassword ? 'text' : 'password'} placeholder='확인' value={confirmPw} onChange={onConfirmPwChange} />
@@ -380,7 +379,7 @@ export default function Join() {
                             </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => handlePrevStep()}>뒤로</button>}   
-                                <button onClick={() => setCurrentStep(currentStep + 1)}>가입하기</button>
+                                <button onClick={() => setCurrentStep()}>가입하기</button>
                             </div>
                         </div>
                     </div>                    
