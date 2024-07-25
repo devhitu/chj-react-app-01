@@ -65,7 +65,6 @@ export default function Join() {
         if (month === 2 && isLeapYear(year)) {
             return 29;
         }
-        
         return daysInMonth;
     };
     
@@ -170,21 +169,65 @@ export default function Join() {
 
 
     //다음단계 버튼 클릭
-    const handleKeyPress = async (e) => {
-        if (e.key === 'Enter') {
+    const handleNextStepOrKeyPress = async (e) => {
+        if (e.key === 'Enter' || e.type === 'click') {
             e.preventDefault(); // 기본 동작을 막음
 
-            // step2 연, 월, 일 값을 합쳐서 birth 문자열 생성
-            const birth = `${year}-${month}-${day}`;
+            // 스텝별로 필요한 입력값 검증
+            switch (currentStep) {
+                case 1:
+                    if (lastName.trim() === '') {
+                        alert('이름을 입력해주세요.');
+                        return;
+                    }
+                    break;
+                case 2:
+                    if (!year || year < 1900 || year > currentYear) {
+                        alert('올바른 연도를 입력해주세요.');
+                        return;
+                    }
+                    if (!month || !day) {
+                        alert('생일을 모두 선택해주세요.');
+                        return;
+                    }
+                    if (gender === '') {
+                        alert('성별을 선택해주세요.');
+                        return;
+                    }
+                    break;
+                case 3:
+                    if (id.trim() === '') {
+                        alert('주소를 기입해주세요.');
+                        return;
+                    }
+                    break;
+                case 4:
+                    if (pw.trim() === '') {
+                        alert('비밀번호를 기입해주세요.');
+                        return;
+                    }
+                    if (confirmPw.trim() === '') {
+                        alert('비밀번호 확인을 기입해주세요.');
+                        return;
+                    }
+                    if (pw !== confirmPw) {
+                        alert('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+                        return;
+                    }
+                    break;
+                case 5:
+                    if (tel.trim() === '') {
+                        alert('연락처를 기입해주세요.');
+                        return;
+                    }
+                    break;
+                default:
+                    break;
+            }
 
-            // step6 비밀번호 확인
-            if (pw !== confirmPw) {
-                alert('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
-                return;
-            }            
-    
             // API 호출 후 다음 단계로 이동
             try {
+                const birth = `${year}-${month}-${day}`;
                 await requestSave(birth); // birth 값을 requestSave 함수에 전달
                 if (currentStep < 6) {
                     setCurrentStep(currentStep + 1);
@@ -197,28 +240,7 @@ export default function Join() {
         }
     };
 
-    const handleNextStep = async () => {
-        // step2 연, 월, 일 값을 합쳐서 birth 문자열 생성
-        const birth = `${year}-${month}-${day}`;
     
-        // step6 비밀번호 확인
-        if (pw !== confirmPw) {
-            alert('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
-            return;
-        }
-    
-        // API 호출
-        try {
-            await requestSave(birth); // birth 값을 requestSave 함수에 전달
-            if (currentStep < 6) {
-                setCurrentStep(currentStep + 1);
-                navigate(`/join/step${currentStep + 1}`);
-            }
-        } catch (error) {
-            console.error('Error saving user:', error);
-            // 에러 처리 로직 추가
-        }
-    };  
     
     //이전단계 버튼 클릭
     const handlePrevStep = () => {
@@ -228,13 +250,9 @@ export default function Join() {
     };  
 
     const requestSave = async () => {
-        if (lastName.length === 0) {
-            alert('이름을 기입해주세요.');
-            return;
-        }
-
+       
         try {
-            const response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
+            const response = await axios.post('', null, {
                 params: {
                     f: firstName,
                     l: lastName,
@@ -269,11 +287,11 @@ export default function Join() {
                                     <input type="text" placeholder='성(선택사항)' value={firstName} onChange={onFirstName} />
                                 </li>
                                 <li>
-                                    <input type="text" placeholder='이름' value={lastName} onChange={onLastName} onKeyPress={handleKeyPress} />
+                                    <input type="text" placeholder='이름' value={lastName} onChange={onLastName} onKeyPress={handleNextStepOrKeyPress} />
                                 </li>
                             </ul>
                             <div className="btn-box">
-                                <button onClick={() => setCurrentStep(currentStep + 1)}>다음</button>
+                                <button onClick={handleNextStepOrKeyPress}>다음</button>
                             
                             </div>
                         </div>
@@ -317,7 +335,7 @@ export default function Join() {
                         </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => handlePrevStep()}>뒤로</button>}   
-                                <button onClick={() => setCurrentStep(currentStep + 1)}>다음</button>
+                                <button onClick={handleNextStepOrKeyPress}>다음</button>
                             </div>
                         </div>
                     </div>
@@ -339,13 +357,13 @@ export default function Join() {
                                         value={id}
                                         onChange={onId}
                                         onBlur={onBlurIdInput} // 포커스가 아이디 입력 필드를 벗어났을 때 검사 수행
-                                        onKeyPress={handleKeyPress}
+                                        onKeyPress={handleNextStepOrKeyPress} 
                                     />
                                 </li>
                             </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => handlePrevStep()}>뒤로</button>}   
-                                <button onClick={() => setCurrentStep(currentStep + 1)}>가입하기</button>
+                                <button onClick={handleNextStepOrKeyPress}>가입하기</button>
                             </div>
                         </div>
                     </div>
@@ -367,7 +385,7 @@ export default function Join() {
                                         value={pw} 
                                         onChange={onPw} 
                                         onBlur={onBlurIdInput} // 포커스가 아이디 입력 필드를 벗어났을 때 검사 수행
-                                        onKeyPress={handleKeyPress}
+                                        onKeyPress={handleNextStepOrKeyPress} 
                                     />
                                 </li>
                                 <li>
@@ -380,7 +398,7 @@ export default function Join() {
                             </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => handlePrevStep()}>뒤로</button>}   
-                                <button onClick={() => setCurrentStep(currentStep + 1)}>가입하기</button>
+                                <button onClick={handleNextStepOrKeyPress}>가입하기</button>
                             </div>
                         </div>
                     </div>                    
@@ -394,21 +412,16 @@ export default function Join() {
                         </div>
                         <div className="input-box">
                             <ul className="input-list type1">
-                                <li class="flex">
-                                    <select name="" id="">
-                                        <option value="">한국</option>
-                                    </select>
-                                    <li>
-                                        <input type="text" placeholder='전화번호'/>
-                                    </li>
-                                    <li>
-                                        <input type="text" placeholder='인증번호'/>
-                                    </li>
+                                <li>
+                                    <input type="text" placeholder='전화번호'/>
+                                </li>
+                                <li>
+                                    <input type="text" placeholder='인증번호'/>
                                 </li>
                             </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => handlePrevStep()}>뒤로</button>}   
-                                <button onClick={handleNextStep}>다음</button>
+                                <button onClick={handleNextStepOrKeyPress}>다음</button>
                             </div>
                         </div>
                     </div>
