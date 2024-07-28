@@ -8,6 +8,7 @@
 .sub-wrap.join .join-box .title-box img{width: 48px;height: 48px;}
 .sub-wrap.join .join-box .input-box{width: 400px;}
 .sub-wrap.join .join-box .input-box .input-list{display: flex;gap:24px 16px;margin-bottom: 50px;flex-wrap: wrap;}
+.sub-wrap.join .join-box .input-box .input-list{position: relative;}
 .sub-wrap.join .join-box .input-box .input-list input[type="text"],
 .sub-wrap.join .join-box .input-box .input-list input[type="password"],
 .sub-wrap.join .join-box .input-box .input-list select{border-radius: 5px;padding: 12px 14px;height: 50px;width: 100%;}
@@ -21,3 +22,6 @@
 
 .sub-wrap.join .join-box .input-box .input-list.type3 li:last-child{width: 100%;}
 .sub-wrap.join .join-box .input-box .input-list.type3 li:not(:last-child){width: calc(33.333% - 11px);}
+
+/* step3 주소 */
+.sub-wrap.join .join-box .input-box .input-list .mail_txt{position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: clamp(11px, 3vmin, 15px); color: #75758a;}

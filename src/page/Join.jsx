@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import iconGoogle from '../res/img/icons/icon_google.svg';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export default function Join() {
-    const navigate = useNavigate();  // useNavigate 훅 사용
     const { step } = useParams(); //step별 파라미터 사용
+    const navigate = useNavigate();  // useNavigate 훅 사용
 
+
+    //http://localhost:3000/join/step2로 접근시 접근불가
     const [currentStep, setCurrentStep] = useState(1);
-    
+    // useEffect(() => {
+    //     const stepNumber = parseInt(step, 10);
+    //     if (stepNumber >= 1 && stepNumber <= 5) {
+    //         setCurrentStep(stepNumber);
+    //     } else {
+    //         navigate('/join/step1'); // 유효하지 않은 step일 경우, 기본 단계로 리디렉션
+    //     }
+    // }, [step, navigate]);
+  
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     
@@ -19,14 +30,13 @@ export default function Join() {
     const [gender, setGender] = useState('');
     
     const [id, setId] = useState('');
-    const [isIdValid, setIsIdValid] = useState(true); // 아이디 유효성 검사 결과 상태    
 
     const [pw, setPw] = useState('');
     const [confirmPw, setConfirmPw] = useState('');
-    const [isPwValid, setIsPwValid] = useState(true); // 비밀번호 유효성 검사 결과 상태    
     const [showPassword, setShowPassword] = useState(false);
 
     const [tel, setTel] = useState('');
+
 
     const onFirstName = (e) => {
         setFirstName(e.target.value);
@@ -51,6 +61,7 @@ export default function Join() {
         { value: 11, label: '11월' },
         { value: 12, label: '12월' }
     ];
+    const yearInputRef = useRef(null); // useRef로 참조를 생성합니다.
     
     const isLeapYear = (year) => {
         // 4로 나누어 떨어지지만, 100으로 나누어 떨어지지 않거나 400으로 나누어 떨어지는 연도는 윤년
@@ -146,34 +157,10 @@ export default function Join() {
         setShowPassword(!showPassword);
     };
 
-
-    // step3, step4 주소, 비밀번호 유효성 검사
-    const onBlurIdInput = () => {
-        switch (currentStep) {
-            case 3:
-                // 3단계에서 ID 유효성 검사
-                const isValidId = validateId(id);
-                setIsIdValid(isValidId);
-                if (!isValidId) {
-                    alert('주소는 영문자와 숫자의 조합이어야 합니다.');
-                }
-                break;
-            case 4:
-                // 4단계에서 비밀번호 유효성 검사
-                const isValidPw = validatePw(pw);
-                setIsPwValid(isValidPw);
-                if (!isValidPw) {
-                    alert('비밀번호는 8자 이상의 영문자와 숫자의 조합이어야 합니다.');
-                }
-                break;
-            default:
-                break;
-        }
-    };
-
-
- 
     // step5 핸드폰 인증
+    const onTel = (e) => {
+        setTel(e.target.value);
+    };
 
 
     //다음단계 버튼 클릭 or Enter Key 누름
@@ -182,59 +169,60 @@ export default function Join() {
             e.preventDefault(); // 기본 동작을 막음
 
             // 스텝별로 필요한 입력값 검증
+            let isValid = true;
             switch (currentStep) {
                 case 1:
                     if (lastName.trim() === '') {
                         alert('이름을 입력해주세요.');
-                        return;
+                        isValid = false;
                     }
                     break;
                 case 2:
                     if (!year || year < 1900 || year > currentYear) {
                         alert('올바른 연도를 입력해주세요.');
-                        return;
+                        isValid = false;
                     }
                     if (!month || !day) {
                         alert('생일을 모두 선택해주세요.');
-                        return;
+                        isValid = false;
                     }
                     if (gender === '') {
                         alert('성별을 선택해주세요.');
-                        return;
-                    }
+                        isValid = false;
+                    }               
                     break;
                 case 3:
                     if (id.trim() === '') {
                         alert('주소를 기입해주세요.');
-                        return;
+                        isValid = false;
                     }
-                    if (!isIdValid) { // 비밀번호 유효성 검사
+                    if (!validateId(id)) {
                         alert('주소는 영문자와 숫자의 조합이어야 합니다.');
-                        return;
-                    }                    
+                        isValid = false;
+                    }
                     break;
                 case 4:
                     if (pw.trim() === '') {
                         alert('비밀번호를 기입해주세요.');
-                        return;
+                        isValid = false;
                     }
                     if (confirmPw.trim() === '') {
                         alert('비밀번호 확인을 기입해주세요.');
-                        return;
+                        isValid = false;
                     }
                     if (pw !== confirmPw) {
                         alert('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
-                        return;
+                        isValid = false;
                     }
-                    if (!isPwValid) { // 비밀번호 유효성 검사
+                    if (!validatePw(pw)) {
                         alert('비밀번호는 8자 이상의 영문자와 숫자의 조합이어야 합니다.');
-                        return;
+                        isValid = false;
                     }
                     break;
                 case 5:
                     if (tel.trim() === '') {
                         alert('연락처를 기입해주세요.');
-                        return;
+                        isValid = false;
                     }
                     break;
                 default:
@@ -242,16 +230,23 @@ export default function Join() {
             }
 
             // API 호출 후 다음 단계로 이동
-            try {
-                const birth = `${year}-${month}-${day}`;
-                await requestSave(birth); // birth 값을 requestSave 함수에 전달
-                if (currentStep < 6) {
-                    setCurrentStep(currentStep + 1);
-                    navigate(`/join/step${currentStep + 1}`);
+            if (isValid) {
+                try {
+                    const birth = `${year}-${month}-${day}`;
+                    await requestSave(birth); // birth 값을 requestSave 함수에 전달
+                    if (currentStep < 6) {
+                        const nextStep = currentStep + 1;
+                        setCurrentStep(nextStep);
+                        navigate(`/join/step${nextStep}`);
+                        // 포커스 설정을 navigate 후에 처리
+                        if (nextStep === 2 && yearInputRef.current) { //case2
+                            yearInputRef.current.focus(); // step2로 이동 시 연도 입력 요소에 포커스를 설정합니다.
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error saving user:', error);
+                    // 에러 처리 로직 추가
                 }
-            } catch (error) {
-                console.error('Error saving user:', error);
-                // 에러 처리 로직 추가
             }
         }
     };
@@ -320,7 +315,15 @@ export default function Join() {
                         </div>
                         <div className="input-box">
                         <ul className="input-list type3">
-                            <li><input type="text" placeholder='연' value={year} onChange={handleYearChange} /></li>
+                            <li>
+                                <input
+                                    type="text"
+                                    placeholder='연'
+                                    value={year}
+                                    onChange={handleYearChange}
+                                    ref={yearInputRef} // ref를 지정합니다.
+                                />
+                            </li>
                             <li>
                                 <select value={month} onChange={handleMonthChange}>
                                     <option value="">월</option>
@@ -363,15 +366,17 @@ export default function Join() {
                         </div>
                         <div className="input-box">
                             <ul className="input-list type1">
-                            <li>
+                                <li>
                                     <input
+                                        class="id"
                                         type="text"
                                         placeholder='주소를 적어주세요'
                                         value={id}
                                         onChange={onId}
-                                        onBlur={onBlurIdInput} // 포커스가 아이디 입력 필드를 벗어났을 때 검사 수행
+                                        //onBlur={onBlurIdInput} // 포커스가 아이디 입력 필드를 벗어났을 때 검사 수행
                                         onKeyPress={handleNextStepOrKeyPress} 
                                     />
+                                    <span class="mail_txt">gmail.com</span>
                                 </li>
                             </ul>
                             <div className="btn-box">
@@ -397,7 +402,7 @@ export default function Join() {
                                         placeholder='비밀번호' 
                                         value={pw} 
                                         onChange={onPw} 
-                                        onBlur={onBlurIdInput} // 포커스가 아이디 입력 필드를 벗어났을 때 검사 수행
+                                        //onBlur={onBlurIdInput} // 포커스가 아이디 입력 필드를 벗어났을 때 검사 수행
                                         onKeyPress={handleNextStepOrKeyPress} 
                                     />
                                 </li>
@@ -426,7 +431,7 @@ export default function Join() {
                         <div className="input-box">
                             <ul className="input-list type1">
                                 <li>
-                                    <input type="text" placeholder='전화번호'/>
+                                    <input type="text" placeholder='전화번호' value={tel} onChange={onTel} />
                                 </li>
                                 <li>
                                     <input type="text" placeholder='인증번호' onKeyPress={handleNextStepOrKeyPress} />
