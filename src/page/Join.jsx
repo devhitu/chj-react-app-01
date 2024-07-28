@@ -23,7 +23,7 @@ export default function Join() {
 
     const [pw, setPw] = useState('');
     const [confirmPw, setConfirmPw] = useState('');
-    const [isPwValid, setIsPwValid] = useState(true); // 아이디 유효성 검사 결과 상태    
+    const [isPwValid, setIsPwValid] = useState(true); // 비밀번호 유효성 검사 결과 상태    
     const [showPassword, setShowPassword] = useState(false);
 
     const [tel, setTel] = useState('');
@@ -118,42 +118,23 @@ export default function Join() {
     };
 
     // step3 주소 입력
+    const onId = (e) => {
+        const inputValue = e.target.value;
+        setId(inputValue);
+    };    
     const validateId = (inputValue) => {
         const pattern = /^(?=.*[a-zA-Z])(?=.*\d).+$/; // 영문자와 숫자가 적어도 한 번 이상 포함되어야 함
         return pattern.test(inputValue);
     };
-
-    const onId = (e) => {
-        const inputValue = e.target.value;
-        setId(inputValue);
-    };
-
-    // step3, step4 주소, 비밀번호 유효성 검사
-    const onBlurIdInput = () => {
-        const isValid = validateId(id);
-        const idValid2 = validatePw(pw);
-
-        setIsIdValid(isValid);
-        setIsPwValid(idValid2);
-
-        // 1차시도 후 불통일때 false(이전true) 한번만 알럿을 띄운다
-        // isValid가 false일 때 (즉, 유효하지 않은 아이디일 때) && isIdValid가 true일 때 (즉, 이전에 유효한 아이디였을 때)
-        if (!isValid && isIdValid) {
-            alert('아이디는 영문자와 숫자의 조합이어야 합니다.');
-        }
-        if (!idValid2 && isPwValid) {
-            alert('비밀번호는 8자 이상의 영문자와 숫자의 조합이어야 합니다.');
-        }
-    };
-
-    // step4 비밀번호 입력
-    const validatePw = (inputValue) => {
-        const pattern = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/; // 영문자와 숫자가 적어도 한 번 이상 포함, 8자 이상 되어야 함
-        return pattern.test(inputValue);
-    };
+   // step4 비밀번호 입력
     const onPw = (e) => {
         const inputValue = e.target.value;
         setPw(inputValue);
+    };
+
+    const validatePw = (inputValue) => {
+        const pattern = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/; // 영문자와 숫자가 적어도 한 번 이상 포함, 8자 이상 되어야 함
+        return pattern.test(inputValue);
     };
 
     const onConfirmPwChange = (e) => {
@@ -165,10 +146,37 @@ export default function Join() {
         setShowPassword(!showPassword);
     };
 
+
+    // step3, step4 주소, 비밀번호 유효성 검사
+    const onBlurIdInput = () => {
+        switch (currentStep) {
+            case 3:
+                // 3단계에서 ID 유효성 검사
+                const isValidId = validateId(id);
+                setIsIdValid(isValidId);
+                if (!isValidId) {
+                    alert('주소는 영문자와 숫자의 조합이어야 합니다.');
+                }
+                break;
+            case 4:
+                // 4단계에서 비밀번호 유효성 검사
+                const isValidPw = validatePw(pw);
+                setIsPwValid(isValidPw);
+                if (!isValidPw) {
+                    alert('비밀번호는 8자 이상의 영문자와 숫자의 조합이어야 합니다.');
+                }
+                break;
+            default:
+                break;
+        }
+    };
+
+
+ 
     // step5 핸드폰 인증
 
 
-    //다음단계 버튼 클릭
+    //다음단계 버튼 클릭 or Enter Key 누름
     const handleNextStepOrKeyPress = async (e) => {
         if (e.key === 'Enter' || e.type === 'click') {
             e.preventDefault(); // 기본 동작을 막음
@@ -200,6 +208,10 @@ export default function Join() {
                         alert('주소를 기입해주세요.');
                         return;
                     }
+                    if (!isIdValid) { // 비밀번호 유효성 검사
+                        alert('주소는 영문자와 숫자의 조합이어야 합니다.');
+                        return;
+                    }                    
                     break;
                 case 4:
                     if (pw.trim() === '') {
@@ -212,6 +224,10 @@ export default function Join() {
                     }
                     if (pw !== confirmPw) {
                         alert('비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+                        return;
+                    }
+                    if (!isPwValid) { // 비밀번호 유효성 검사
+                        alert('비밀번호는 8자 이상의 영문자와 숫자의 조합이어야 합니다.');
                         return;
                     }
                     break;
@@ -239,7 +255,6 @@ export default function Join() {
             }
         }
     };
-
     
     
     //이전단계 버튼 클릭
@@ -250,7 +265,6 @@ export default function Join() {
     };  
 
     const requestSave = async () => {
-       
         try {
             const response = await axios.post('', null, {
                 params: {
@@ -268,7 +282,6 @@ export default function Join() {
         }catch(error){
             console.error('Error saving user:', error);
         }
-
     };
 
     const renderStep = () => {
@@ -325,7 +338,7 @@ export default function Join() {
                                 </select>
                             </li>
                             <li>
-                                <select name="" id="" value={gender} onChange={onGenderChange}>
+                                <select name="" id="" value={gender} onChange={onGenderChange} onKeyPress={handleNextStepOrKeyPress}>
                                     <option value="">성별</option>
                                     <option value="여자">여자</option>
                                     <option value="남자">남자</option>
@@ -363,7 +376,7 @@ export default function Join() {
                             </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => handlePrevStep()}>뒤로</button>}   
-                                <button onClick={handleNextStepOrKeyPress}>가입하기</button>
+                                <button onClick={handleNextStepOrKeyPress}>다음</button>
                             </div>
                         </div>
                     </div>
@@ -398,7 +411,7 @@ export default function Join() {
                             </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => handlePrevStep()}>뒤로</button>}   
-                                <button onClick={handleNextStepOrKeyPress}>가입하기</button>
+                                <button onClick={handleNextStepOrKeyPress}>다음</button>
                             </div>
                         </div>
                     </div>                    
@@ -416,12 +429,12 @@ export default function Join() {
                                     <input type="text" placeholder='전화번호'/>
                                 </li>
                                 <li>
-                                    <input type="text" placeholder='인증번호'/>
+                                    <input type="text" placeholder='인증번호' onKeyPress={handleNextStepOrKeyPress} />
                                 </li>
                             </ul>
                             <div className="btn-box">
                                 {currentStep > 1 && <button onClick={() => handlePrevStep()}>뒤로</button>}   
-                                <button onClick={handleNextStepOrKeyPress}>다음</button>
+                                <button onClick={handleNextStepOrKeyPress}>가입하기</button>
                             </div>
                         </div>
                     </div>
