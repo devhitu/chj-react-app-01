@@ -133,7 +133,7 @@ export default function Join() {
         const pattern = /^(?=.*[a-zA-Z])(?=.*\d).+$/; // 영문자와 숫자가 적어도 한 번 이상 포함되어야 함
         return pattern.test(inputValue);
     };
-    
+
    // step4 비밀번호 입력
     const onPw = (e) => {
         const inputValue = e.target.value;
@@ -258,7 +258,7 @@ export default function Join() {
 
     const requestSave = async () => {
         try {
-            const response = await axios.post('', null, {
+            const response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/all', null, {
                 params: {
                     f: firstName,
                     l: lastName,
@@ -406,7 +406,7 @@ export default function Join() {
                                 <li>
                                     <input type={showPassword ? 'text' : 'password'} placeholder='확인' value={confirmPw} onChange={onConfirmPwChange} />
                                     <label htmlFor="showPasswordCheckbox">
-                                        <input type="checkbox" id="showPasswordCheckbox" onChange={toggleShowPassword} />
+                                        <input type="checkbox" id="showPasswordCheckbox" onChange={toggleShowPassword} onKeyPress={handleNextStepOrKeyPress} />
                                         <span>비밀번호 표시</span>
                                     </label>
                                 </li>
