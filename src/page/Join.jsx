@@ -37,7 +37,7 @@ export default function Join() {
 
     const [tel, setTel] = useState('');
 
-
+    //step1
     const onFirstName = (e) => {
         setFirstName(e.target.value);
     };
@@ -47,6 +47,18 @@ export default function Join() {
     };
 
     //step2 월, 일 계산
+    const yearInputRef = useRef(null); // useRef로 참조를 생성합니다.
+    const currentYear = new Date().getFullYear();
+
+    const handleYearChange = (e) => {
+        const inputYear = e.target.value.trim(); // 입력한 연도, trim()으로 앞뒤 공백 제거
+        setYear(inputYear); // 입력한 연도 설정
+    };
+
+    const isLeapYear = (year) => {
+        // 4로 나누어 떨어지지만, 100으로 나누어 떨어지지 않거나 400으로 나누어 떨어지는 연도는 윤년
+        return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+    };
     const Months = [
         { value: 1, label: '1월' },
         { value: 2, label: '2월' },
@@ -60,33 +72,7 @@ export default function Join() {
         { value: 10, label: '10월' },
         { value: 11, label: '11월' },
         { value: 12, label: '12월' }
-    ];
-    const yearInputRef = useRef(null); // useRef로 참조를 생성합니다.
-    
-    const isLeapYear = (year) => {
-        // 4로 나누어 떨어지지만, 100으로 나누어 떨어지지 않거나 400으로 나누어 떨어지는 연도는 윤년
-        return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
-    };
-    
-    const daysInMonth = (year, month) => {
-        // JavaScript의 Date 객체는 월 인덱스가 0부터 시작하므로 month에서 1을 빼줍니다.
-        const daysInMonth = new Date(year, month, 0).getDate();
-    
-        // 윤년이면서 2월인 경우, 일 수를 29일로 수정
-        if (month === 2 && isLeapYear(year)) {
-            return 29;
-        }
-        return daysInMonth;
-    };
-    
-    
-    const currentYear = new Date().getFullYear();
-
-    const handleYearChange = (e) => {
-        const inputYear = e.target.value.trim(); // 입력한 연도, trim()으로 앞뒤 공백 제거
-        setYear(inputYear); // 입력한 연도 설정
-    };
-
+    ];    
 
     const handleMonthChange = (e) => {
         const selectedMonth = parseInt(e.target.value);
@@ -104,26 +90,36 @@ export default function Join() {
             setDay(''); // 선택된 일자 초기화
         }
     };
+
+    const daysInMonth = (year, month) => {
+        // JavaScript의 Date 객체는 월 인덱스가 0부터 시작하므로 month에서 1을 빼줍니다.
+        const daysInMonth = new Date(year, month, 0).getDate();
+    
+        // 윤년이면서 2월인 경우, 일 수를 29일로 수정
+        if (month === 2 && isLeapYear(year)) {
+            return 29;
+        }
+        return daysInMonth;
+    };    
     
     // 연도와 월에 따라 동적으로 일자 선택 옵션 렌더링 => 입력에 따라서 비교X, 입력후 월을 고를때 올바른 년도인지 판별!!
     const renderDays = () => {
-        if (!year || !month) {
-            return <option value="">일</option>;
-        }
+        if (!year || !month) return <option value="">일</option>;
     
         const daysInSelectedMonth = daysInMonth(parseInt(year), parseInt(month));
-        
-        return Array.from({ length: daysInSelectedMonth }, (_, index) => {
-            const dayValue = index + 1;
-            return (
-                <option key={dayValue} value={dayValue}>
-                    {dayValue}일
+        const options = [];
+    
+        for (let i = 1; i <= daysInSelectedMonth; i++) {
+            options.push(
+                <option key={i} value={i}>
+                    {i}일
                 </option>
             );
-        });
+        }
+    
+        return options;
     };
 
-    // step2 성별선택
     const onGenderChange = (e) => {
         setGender(e.target.value);
     };
@@ -137,6 +133,7 @@ export default function Join() {
         const pattern = /^(?=.*[a-zA-Z])(?=.*\d).+$/; // 영문자와 숫자가 적어도 한 번 이상 포함되어야 함
         return pattern.test(inputValue);
     };
+    
    // step4 비밀번호 입력
     const onPw = (e) => {
         const inputValue = e.target.value;
