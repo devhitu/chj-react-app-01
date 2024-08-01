@@ -157,7 +157,7 @@ export default function Join(){
             });
             alert(response.data); //ok
         }catch(error){
-            console.error('Error saving user:', error);
+            console.error('Error saving user:', error.response ? error.response.data : error.message);
         }
     };
 
