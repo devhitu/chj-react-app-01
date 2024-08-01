@@ -2,7 +2,7 @@ import React, { useState, useEffect,useRef } from 'react';
 import iconGoogle from '../res/img/icons/icon_google.svg';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import useJoinUserStore from '../store/useJoinUserStore';
+import useJoinUserStore from './../store/useJoinUserStore';
 
 
 export default function Join() {
