@@ -6,8 +6,7 @@ import iconGoogle from '../res/img/icons/icon_google.svg';
 
 export default function Join(){
     const [step,setStep] = useState(1);
-    // const joinUserStore = useJoinUserStore();
-    // const { firstName, lastName, year, month, day, gender, setFirstName, setLastName, setYear, setMonth, setDay, setGender } = useJoinUserStore();
+    const navigate = useNavigate();  // useNavigate 훅 사용
 
     // step1
     const [firstName, setFirstName] = useState('');
@@ -16,7 +15,17 @@ export default function Join(){
     const [year, setYear] = useState('');
     const [month, setMonth] = useState('');
     const [day, setDay] = useState('');
-    const [gender, setGender] = useState('');    
+    const [gender, setGender] = useState('');
+    //step3
+    const [id, setId] = useState('');
+    //step4
+    const [pw, setPw] = useState('');
+    const [confirmPw, setConfirmPw] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    //step5
+    const [tel, setTel] = useState('');
+    const [confirmTel, setConfirmTel] = useState('');
+    
 
     //step1
     const handleFirstName = (e) => {
@@ -97,6 +106,35 @@ export default function Join(){
         const value = e.target.value.trim();
         setGender(value);// Zustand 상태 업데이트        
     };
+    //step3
+    const handIdChange = (e) => {
+        const value = e.target.value.trim();
+        setId(value);// Zustand 상태 업데이트        
+    };
+    //step4
+    const handlePwChange = (e) => {
+        const value = e.target.value.trim();
+        setPw(value);// Zustand 상태 업데이트        
+    };
+
+    const handleConfirmPwChange = (e) => {
+        const inputValue = e.target.value.trim();
+        setConfirmPw(inputValue);
+    };
+
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };    
+    //step5
+    const handleTelChange = (e) => {
+        const value = e.target.value.trim();
+        setTel(value);// Zustand 상태 업데이트        
+    };
+    const handleConfirmTelChange = (e) => {
+        const inputValue = e.target.value.trim();
+        setConfirmTel(inputValue);
+    };
+
 
     const handleNextStepOrKeyPress = async (e) => {
         if (e.key === 'Enter' || e.type === 'click') {
@@ -128,9 +166,53 @@ export default function Join(){
                     }              
                     else{
                         setStep(3);
-                        await requestSave(); // 데이터 저장  요청                        
+                        console.log(lastName,month,year,day,gender)
+
+                        //await requestSave(); // 데이터 저장  요청                        
                     }
                     break;
+                case 3:{
+                    if (!id) {
+                        alert('주소를 작성해주세요.');
+                    }
+                    else if (!(/^(?=.*[a-zA-Z])(?=.*\d).{4,}$/.test(id))){
+                        alert('주소는 영문자와 숫자의 4자 이상의 조합이어야 합니다.');
+                    }
+                    else{
+                        setStep(4);
+                    }
+                    break;
+                }
+                case 4:{
+                    if (!pw) {
+                        alert('비밀번호를 작성해주세요.');
+                    }
+                    else if (!(/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(pw))){
+                        alert('비밀번호는 영문자와 숫자의 8자 이상의 조합이어야 합니다.');
+                    }
+                    else if (confirmPw !== pw){
+                        alert('이전 비밀번호와 같지않습니다.');
+                    }
+                    else{
+                        setStep(5);
+                    }
+                    break;
+                }
+                case 5:{
+                    if (!tel) {
+                        alert('연락처를 기입해주세요.');
+                    }
+                    else if (confirmTel !== tel){
+                        alert('인증번호가 유효하지 않습니다.');
+                    }else{
+                        setStep(6);
+                    }
+                    break;
+                }
+                case 6:{
+
+                    break;
+                }
                 default:
                     break;
             }
@@ -198,42 +280,42 @@ export default function Join(){
                         <p>생일과 성별을 입력하세요</p>
                     </div>
                     <div className="input-box">
-                    <ul className="input-list type3">
-                        <li>
-                            <input
-                                type="text"
-                                placeholder='연'
-                                value={year}
-                                onChange={handleYearChange}
-                                // ref={yearInputRef} // ref를 지정합니다.
-                            />
-                        </li>
-                        <li>
-                            <select value={month} onChange={handleMonthChange}>
-                                <option>월</option>
-                                {Months.map((m) => (
-                                    <option key={m.value} value={m.value}>
-                                        {m.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </li>
-       
-                        <li>
-                            <select value={day} onChange={handleDayChange}>
-                                <option>일</option>
-                                {renderDays()}
-                            </select>
-                        </li>
-                        <li>
-                            <select name="" id="" value={gender} onChange={handleGenderChange} onKeyPress={handleNextStepOrKeyPress}>
-                                <option>성별</option>
-                                <option value="여자">여자</option>
-                                <option value="남자">남자</option>
-                                <option value="공개안함">공개안함</option>
-                            </select>
-                        </li>
-                    </ul>
+                        <ul className="input-list type3">
+                            <li>
+                                <input
+                                    type="text"
+                                    placeholder='연'
+                                    value={year}
+                                    onChange={handleYearChange}
+                                    // ref={yearInputRef} // ref를 지정합니다.
+                                />
+                            </li>
+                            <li>
+                                <select value={month} onChange={handleMonthChange}>
+                                    <option>월</option>
+                                    {Months.map((m) => (
+                                        <option key={m.value} value={m.value}>
+                                            {m.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </li>
+        
+                            <li>
+                                <select value={day} onChange={handleDayChange}>
+                                    <option>일</option>
+                                    {renderDays()}
+                                </select>
+                            </li>
+                            <li>
+                                <select name="" id="" value={gender} onChange={handleGenderChange} onKeyPress={handleNextStepOrKeyPress}>
+                                    <option>성별</option>
+                                    <option value="여자">여자</option>
+                                    <option value="남자">남자</option>
+                                    <option value="공개안함">공개안함</option>
+                                </select>
+                            </li>
+                        </ul>
                         <div className="btn-box">
                             <button onClick={handleNextStepOrKeyPress}>다음</button>
                         </div>
@@ -243,33 +325,108 @@ export default function Join(){
             break;
         case 3: 
             form=(
-                <div>
-                    form3
-                    <button>다음</button>
+                <div className="join-box">
+                    <div className="title-box">
+                        <img src={iconGoogle} alt="" />
+                        <h1>Gmail 주소 선택하기</h1>
+                        <p>Gmail 새 주소를 만드세요.</p>
+                    </div>
+                    <div className="input-box">
+                        <ul className="input-list type1">
+                            <li>
+                                <input
+                                    class="id"
+                                    type="text"
+                                    placeholder='주소를 적어주세요'
+                                    value={id}
+                                    onChange={handIdChange}
+                                    onKeyPress={handleNextStepOrKeyPress} 
+                                />
+                                <span class="mail_txt">gmail.com</span>
+                            </li>
+                        </ul>
+                        <div className="btn-box">
+                            <button onClick={handleNextStepOrKeyPress}>다음</button>
+                        </div>
+                    </div>
                 </div>
             )
             break;
         case 4: 
             form=(
-                <div>
-                    form4
-                    <button>다음</button>
+                <div className="join-box">
+                    <div className="title-box">
+                        <img src={iconGoogle} alt="" />
+                        <h1>안전한 비밀번호 만들기</h1>
+                        <p>문자, 숫자, 기호를 조합하여 안전한 비밀번호를 만드세요.</p>
+                    </div>
+                    <div className="input-box">
+                        <ul className="input-list type1">
+                            <li>
+                                <input 
+                                    type={showPassword ? 'text' : 'password'} 
+                                    placeholder='비밀번호' 
+                                    value={pw} 
+                                    onChange={handlePwChange} 
+                                />
+                            </li>
+                            <li>
+                                <input type={showPassword ? 'text' : 'password'} placeholder='확인' value={confirmPw} onChange={handleConfirmPwChange} />
+                                <label htmlFor="showPasswordCheckbox">
+                                    <input type="checkbox" id="showPasswordCheckbox" 
+                                    onChange={toggleShowPassword}
+                                    onKeyPress={handleNextStepOrKeyPress} />
+                                    <span>비밀번호 표시</span>
+                                </label>
+                            </li>
+                        </ul>
+                        <div className="btn-box">
+                            <button onClick={handleNextStepOrKeyPress}>다음</button>
+                        </div>
+                    </div>
                 </div>
             )
             break;
         case 5: 
             form=(
-                <div>
-                    form5
-                    <button>다음</button>
+                <div className="join-box">
+                    <div className="title-box">
+                        <img src={iconGoogle} alt="" />
+                        <h1>보안문자 입력</h1>
+                    </div>
+                    <div className="input-box">
+                        <ul className="input-list type1">
+                            <li>
+                                <input type="text" placeholder='전화번호' value={tel} onChange={handleTelChange} />
+                            </li>
+                            <li>
+                                <input type="text" placeholder='인증번호' 
+                                value={confirmTel} 
+                                onChange={handleConfirmTelChange} 
+                                onKeyPress={handleNextStepOrKeyPress} />
+                            </li>
+                        </ul>
+                        <div className="btn-box">
+                            <button onClick={handleNextStepOrKeyPress}>다음</button>
+                        </div>
+                    </div>
                 </div>
             )
             break;
         case 6: 
             form=(
-                <div>
-                    form6
-                    <button>다음</button>
+                <div className="join-box step6">
+                    <div className="title-box">
+                        <img src={iconGoogle} alt="" />
+                        <h1>회원가입 완료</h1>
+                        <p>회원가입이 완료되었습니다.</p>
+                    </div>
+                    <div className="input-box">
+                        <ul className="input-list">
+                            <li>회원아이디 : <strong>{id}@gamil.com</strong></li>
+                        </ul>
+                        <div className="btn-box"> <button onClick={() => navigate('/main')}>Youtube로 이동하기</button></div>
+                    </div>
                 </div>
             )
             break;

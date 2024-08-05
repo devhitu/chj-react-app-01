@@ -25,3 +25,6 @@
 
 /* step3 주소 */
 .sub-wrap.join .join-box .input-box .input-list .mail_txt{position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: clamp(11px, 3vmin, 15px); color: #75758a;}
+
+/* step6 */
+.step6 .input-list{font-size: 22px;height: 125px;}
