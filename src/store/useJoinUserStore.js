@@ -10,7 +10,7 @@ const useJoinUserStore = create((set) => ({
         id: '',
         pw: '',
         tel: '',
-        nick: '',
+        // nick: '',
     },
     setFirstName: (data) => set((state) => ({
         joinUser: {
@@ -58,6 +58,12 @@ const useJoinUserStore = create((set) => ({
         joinUser: {
             ...state.joinUser,
             pw: data
+        }
+    })),
+    setTel: (data) => set((state) => ({
+        joinUser: {
+            ...state.joinUser,
+            tel: data
         }
     })),
     getState: () => useJoinUserStore.getState().joinUser, // 상태 읽기 메서드 추가

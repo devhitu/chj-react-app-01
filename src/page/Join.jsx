@@ -165,10 +165,7 @@ export default function Join(){
                         alert('성별을 선택해주세요.');
                     }              
                     else{
-                        setStep(3);
-                        console.log(lastName,month,year,day,gender)
-
-                        //await requestSave(); // 데이터 저장  요청                        
+                        setStep(3);                                             
                     }
                     break;
                 case 3:{
@@ -210,7 +207,7 @@ export default function Join(){
                     break;
                 }
                 case 6:{
-
+                    await requestSave(); // 데이터 저장  요청   
                     break;
                 }
                 default:
@@ -222,7 +219,7 @@ export default function Join(){
     const requestSave = async () => {
         try {
             const state = useJoinUserStore.getState();
-            const { firstName, lastName, year, month, day, gender } = state.joinUser;
+            const { firstName, lastName, year, month, day, gender, tel } = state.joinUser;
             const birth = `${year}-${month}-${day}`;
 
             const response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
@@ -231,10 +228,10 @@ export default function Join(){
                     l: lastName,
                     b: birth,
                     g: gender,
-                    id: '',
-                    pw: '',
-                    tel: '',
-                    nick: '8'
+                    id: id,
+                    pw: pw,
+                    tel: tel,
+                    // nick: '8'
                 }
             });
             alert(response.data); //ok
@@ -335,14 +332,14 @@ export default function Join(){
                         <ul className="input-list type1">
                             <li>
                                 <input
-                                    class="id"
+                                    className="id"
                                     type="text"
                                     placeholder='주소를 적어주세요'
                                     value={id}
                                     onChange={handIdChange}
                                     onKeyPress={handleNextStepOrKeyPress} 
                                 />
-                                <span class="mail_txt">gmail.com</span>
+                                <span className="mail_txt">gmail.com</span>
                             </li>
                         </ul>
                         <div className="btn-box">
