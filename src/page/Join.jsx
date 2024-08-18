@@ -231,7 +231,6 @@ export default function Join(){
                     id: id,
                     pw: pw,
                     tel: tel,
-                    // nick: '8'
                 }
             });
             alert(response.data); //ok
