@@ -5,7 +5,10 @@ const useJoinUserStore = create((set) => ({
     joinUser: {
         firstname: '',
         lastname: '',
-        birth: '',
+        // birth: '',
+        year: '',
+        month: '',
+        day:'',
         gender: '',
         id: '',
         pw: '',

@@ -219,7 +219,7 @@ export default function Join(){
     const requestSave = async () => {
         try {
             const state = useJoinUserStore.getState();
-            const { firstName, lastName, year, month, day, gender, tel } = state.joinUser;
+            const { firstName, lastName, year, month, day, gender, id, pw, tel } = state.joinUser;
             const birth = `${year}${month}${day}`;
 
             const response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
@@ -231,6 +231,7 @@ export default function Join(){
                     id: id,
                     pw: pw,
                     tel: tel,
+                    nick:"",
                 }
             });
             alert(response.data); //ok
