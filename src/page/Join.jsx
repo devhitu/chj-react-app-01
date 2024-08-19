@@ -220,8 +220,22 @@ export default function Join(){
         }        
     }
 
+    const requestAuth = async () => {
+        try{
+            const reponse = await axios.get('http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth', null,{
+                params:{
+                    telAuth: firstName,
+                }
+            })
+            alert(reponse.telAuth)
+            confirmTel(reponse.telAuth)
+        }catch(error){
+            console.error('Error saving user:', error.response ? error.response.data : error.message);
+        }
+    }
+
     const requestSave = async () => {
-        alert('ddd')
+        // alert('ddd')
         try {
             // const state = useJoinUserStore.getState();
             // const { firstName, lastName, year, month, day, gender, id, pw, tel } = state.joinUser;
