@@ -145,7 +145,7 @@ export default function Join(){
             
             switch (step) {
                 case 1:
-                    if (!lastName) {
+                    if (!firstName) {
                         alert('이름을 입력해주세요.');
                     }
                     else{
@@ -259,10 +259,10 @@ export default function Join(){
                         <div className="input-box">
                             <ul className="input-list type1">
                                 <li>
-                                    <input type="text" placeholder='성(선택사항)' value={firstName} onChange={handleFirstName} />
+                                    <input type="text" placeholder='성(선택사항)' value={lastName} onChange={handleLastName} />
                                 </li>
                                 <li>
-                                    <input type="text" placeholder='이름' value={lastName} onChange={handleLastName} onKeyPress={handleNextStepOrKeyPress} />
+                                    <input type="text" placeholder='이름' value={firstName} onChange={handleFirstName} onKeyPress={handleNextStepOrKeyPress} />
                                 </li>
                             </ul>
                             <div className="btn-box">
