@@ -11,7 +11,7 @@ export default function Join(){
     const navigate = useNavigate();  // useNavigate 훅 사용
 
     // step1
-    const [firstName, setFirstName] = useState('');
+   
     const [lastName, setLastName] = useState('');
     // step2
     const [year, setYear] = useState('');
@@ -27,12 +27,14 @@ export default function Join(){
     //step5
     const [tel, setTel] = useState('');
     const [confirmTel, setConfirmTel] = useState('');
+
+
+    const [validTelCode , setValidTelCode] = useState('');
     
 
     //step1
     const handleFirstName = (e) => {
         const value = e.target.value.trim();
-        setFirstName(value); 
         joinUserStore.setFirstName(value); // Zustand 상태 업데이트
     };
     
@@ -229,7 +231,7 @@ export default function Join(){
 
             const response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
                 params: {
-                    f: firstName,
+                    f: joinUserStore.joinUser.firstName,
                     l: lastName,
                     b: birth,
                     g: gender,
@@ -240,6 +242,10 @@ export default function Join(){
                 }
             });
             alert(response.data); //ok
+
+
+
+            setValidTelCode(response.data)
         }catch(error){
             console.error('Error saving user:', error.response ? error.response.data : error.message);
         }
@@ -259,7 +265,7 @@ export default function Join(){
                         <div className="input-box">
                             <ul className="input-list type1">
                                 <li>
-                                    <input type="text" placeholder='성(선택사항)' value={firstName} onChange={handleFirstName} />
+                                    <input type="text" placeholder='성(선택사항)' value={joinUserStore.joinUser.firstName} onChange={handleFirstName} />
                                 </li>
                                 <li>
                                     <input type="text" placeholder='이름' value={lastName} onChange={handleLastName} onKeyPress={handleNextStepOrKeyPress} />
