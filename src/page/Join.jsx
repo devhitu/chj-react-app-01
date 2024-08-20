@@ -33,18 +33,18 @@ export default function Join(){
     const handleFirstName = (e) => {
         const value = e.target.value.trim();
         setFirstName(value); 
-        joinUserStore.setFirstName(value); // Zustand 상태 업데이트
+        // joinUserStore.setFirstName(value); 
     };
     
     const handleLastName = (e) => {
         const value = e.target.value.trim();
-        setLastName(value); // Zustand 상태 업데이트
+        setLastName(value); 
     };
 
     //step2 월, 일 계산
     const handleYearChange = (e) => {
         const value = e.target.value.trim();
-        setYear(value); // Zustand 상태 업데이트
+        setYear(value); 
     };
 
     const Months = [
@@ -75,7 +75,7 @@ export default function Join(){
 
     const handleMonthChange = (e) => {
         const value = parseInt(e.target.value);
-        setMonth(value); // Zustand 상태 업데이트
+        setMonth(value); 
         
         const days = daysInMonth(parseInt(year), value); // 해당 연도와 월의 마지막 날짜 계산
         if (day > days) {
@@ -102,22 +102,22 @@ export default function Join(){
 
     const handleDayChange = (e) => {
         const value = parseInt(e.target.value);
-        setDay(value); // Zustand 상태 업데이트
+        setDay(value); 
     };    
 
     const handleGenderChange = (e) => {
         const value = e.target.value.trim();
-        setGender(value);// Zustand 상태 업데이트        
+        setGender(value);        
     };
     //step3
     const handIdChange = (e) => {
         const value = e.target.value.trim();
-        setId(value);// Zustand 상태 업데이트        
+        setId(value);        
     };
     //step4
     const handlePwChange = (e) => {
         const value = e.target.value.trim();
-        setPw(value);// Zustand 상태 업데이트        
+        setPw(value);        
     };
 
     const handleConfirmPwChange = (e) => {
@@ -131,12 +131,12 @@ export default function Join(){
     //step5
     const handleTelChange = (e) => {
         const value = e.target.value.trim();
-        setTel(value);// Zustand 상태 업데이트        
+        setTel(value);  
     };
-    const handleConfirmTelChange = (e) => {
-        const inputValue = e.target.value.trim();
-        setConfirmTel(inputValue);
-    };
+    // const handleConfirmTelChange = (e) => {
+    //     const inputValue = e.target.value.trim();
+    //     setConfirmTel(inputValue);
+    // };
 
 
     const handleNextStepOrKeyPress = async (e) => {
@@ -224,7 +224,7 @@ export default function Join(){
         try{
             const reponse = await axios.get('http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth', null,{
                 params:{
-                    telAuth: firstName,
+                    telAuth: tel,
                 }
             })
             alert(reponse.telAuth)
@@ -418,11 +418,12 @@ export default function Join(){
                             <li>
                                 <input type="text" placeholder='인증번호' 
                                 value={confirmTel} 
-                                onChange={handleConfirmTelChange} 
+                                // onChange={handleConfirmTelChange} 
                                 onKeyPress={handleNextStepOrKeyPress} />
                             </li>
                         </ul>
                         <div className="btn-box">
+                            <button onClick={requestAuth}>인증 번호 받기</button>
                             <button onClick={handleNextStepOrKeyPress}>다음</button>
                         </div>
                     </div>
