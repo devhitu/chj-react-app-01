@@ -99,7 +99,7 @@ export default function Join() {
         try {
             if (action === 'request') {
                 // 인증번호 요청
-                // 예시 http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth?tel=01099361422
+                // 예시 http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth?tel=01022223333
                 const responseAuth = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth', {
                     telAuth: tel,
                 });
