@@ -1,13 +1,13 @@
 import axios from 'axios';
-import {useState} from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useJoinUserStore from '../store/useJoinUserStore';
 import iconGoogle from '../res/img/icons/icon_google.svg';
 
-export default function Join(){
+export default function Join() {
     const joinUserStore = useJoinUserStore();
 
-    const [step,setStep] = useState(1);
+    const [step, setStep] = useState(1);
     const navigate = useNavigate();  // useNavigate 훅 사용
 
     // step1
@@ -18,34 +18,23 @@ export default function Join(){
     const [month, setMonth] = useState('');
     const [day, setDay] = useState('');
     const [gender, setGender] = useState('');
-    //step3
+    // step3
     const [id, setId] = useState('');
-    //step4
+    // step4
     const [pw, setPw] = useState('');
     const [confirmPw, setConfirmPw] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    //step5
+    // step5
     const [tel, setTel] = useState('');
     const [confirmTel, setConfirmTel] = useState('');
-    
+    const [authCode, setAuthCode] = useState('');
 
-    //step1
-    const handleFirstName = (e) => {
-        const value = e.target.value.trim();
-        setFirstName(value); 
-        // joinUserStore.setFirstName(value); 
-    };
-    
-    const handleLastName = (e) => {
-        const value = e.target.value.trim();
-        setLastName(value); 
-    };
+    // step1 handlers
+    const handleFirstName = (e) => setFirstName(e.target.value.trim());
+    const handleLastName = (e) => setLastName(e.target.value.trim());
 
-    //step2 월, 일 계산
-    const handleYearChange = (e) => {
-        const value = e.target.value.trim();
-        setYear(value); 
-    };
+    // step2 handlers
+    const handleYearChange = (e) => setYear(e.target.value.trim());
 
     const Months = [
         { value: 1, label: '1월' },
@@ -60,84 +49,84 @@ export default function Join(){
         { value: 10, label: '10월' },
         { value: 11, label: '11월' },
         { value: 12, label: '12월' }
-    ];    
+    ];
 
-    const isLeapYear = (year) => { //윤년
-        return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
-    };    
-    const daysInMonth = (year, month) => { // 월에 따른 일수 계산
+    const isLeapYear = (year) => (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+
+    const daysInMonth = (year, month) => {
         const daysInMonth = new Date(year, month, 0).getDate();
-        if (month === 2 && isLeapYear(year)) { // 윤년
+        if (month === 2 && isLeapYear(year)) {
             return 29;
         }
         return daysInMonth;
-    };     
+    };
 
     const handleMonthChange = (e) => {
         const value = parseInt(e.target.value);
-        setMonth(value); 
-        
-        const days = daysInMonth(parseInt(year), value); // 해당 연도와 월의 마지막 날짜 계산
+        setMonth(value);
+
+        const days = daysInMonth(parseInt(year), value);
         if (day > days) {
             setDay(''); // 선택된 일자 초기화
         }
     };
 
-    // 연도와 월에 따라 동적으로 일자 선택 옵션 렌더링 => 입력에 따라서 비교X, 입력후 월을 고를때 올바른 년도인지 판별!!
     const renderDays = () => {
         if (!year || !month) return <option value="">일</option>;
-    
+
         const daysInSelectedMonth = daysInMonth(parseInt(year, 10), parseInt(month, 10));
-        const options = [];
+        return Array.from({ length: daysInSelectedMonth }, (_, i) => (
+            <option key={i + 1} value={i + 1}>{i + 1}일</option>
+        ));
+    };
+
+    const handleDayChange = (e) => setDay(parseInt(e.target.value));
+
+    const handleGenderChange = (e) => setGender(e.target.value.trim());
+
+    // step3 handlers
+    const handIdChange = (e) => setId(e.target.value.trim());
+
+    // step4 handlers
+    const handlePwChange = (e) => setPw(e.target.value.trim());
+    const handleConfirmPwChange = (e) => setConfirmPw(e.target.value.trim());
+    const toggleShowPassword = () => setShowPassword(!showPassword);
+
+    // step5 handlers
+    const handleConfirmTelChange = (e) => setConfirmTel(e.target.value.trim());
+
+    const handleAuthProcess = async (action) => {
+        try {
+            if (action === 'request') {
+                // 인증번호 요청
+                // 예시 http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth?tel=01099361422
+                const responseAuth = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth', {
+                    telAuth: tel,
+                });
     
-        for (let i = 1; i <= daysInSelectedMonth; i++) {
-            options.push(
-                <option key={i} value={i}>
-                    {i}일
-                </option>
-            );
+                const receivedAuthCode = responseAuth.data.telAuth;
+                console.log(receivedAuthCode)
+                setAuthCode(receivedAuthCode); // 받은 인증번호 저장
+    
+                alert('인증번호가 발송되었습니다. 확인 후 입력해주세요.');
+                
+            } else if (action === 'verify') {
+                // 인증번호 검증
+                if (confirmTel === authCode) {
+                    alert('인증이 완료되었습니다.');
+                    setStep(6); // 다음 단계로 이동
+                } else {
+                    alert('인증번호가 유효하지 않습니다.');
+                }
+            }
+        } catch (error) {
+            if (action === 'request') {
+                console.error('인증번호 요청 오류:', error.response ? error.response.data : error.message);
+            } else if (action === 'verify') {
+                console.error('인증번호 확인 오류:', error.response ? error.response.data : error.message);
+            }
         }
-        return options;
     };
-
-    const handleDayChange = (e) => {
-        const value = parseInt(e.target.value);
-        setDay(value); 
-    };    
-
-    const handleGenderChange = (e) => {
-        const value = e.target.value.trim();
-        setGender(value);        
-    };
-    //step3
-    const handIdChange = (e) => {
-        const value = e.target.value.trim();
-        setId(value);        
-    };
-    //step4
-    const handlePwChange = (e) => {
-        const value = e.target.value.trim();
-        setPw(value);        
-    };
-
-    const handleConfirmPwChange = (e) => {
-        const inputValue = e.target.value.trim();
-        setConfirmPw(inputValue);
-    };
-
-    const toggleShowPassword = () => {
-        setShowPassword(!showPassword);
-    };    
-    //step5
-    const handleTelChange = (e) => {
-        const value = e.target.value.trim();
-        setTel(value);  
-    };
-    // const handleConfirmTelChange = (e) => {
-    //     const inputValue = e.target.value.trim();
-    //     setConfirmTel(inputValue);
-    // };
-
 
     const handleNextStepOrKeyPress = async (e) => {
         if (e.key === 'Enter' || e.type === 'click') {
@@ -147,101 +136,67 @@ export default function Join(){
                 case 1:
                     if (!firstName) {
                         alert('이름을 입력해주세요.');
-                    }
-                    else{
+                    } else {
                         setStep(2);
                     }
                     break;
                 case 2:
-                    // 미입력 or 1900 미만 or 현재년도 초과
                     if (!year || year < 1900 || year > new Date().getFullYear()) {
                         alert('올바른 연도를 입력해주세요.'); 
                         setYear(''); // 연도 초기화
-                    }
-                    else if (!month) {
+                    } else if (!month) {
                         alert('월을 선택해주세요.');
-                    }
-                    else if (!day) {
+                    } else if (!day) {
                         alert('일을 선택해주세요.');
-                    }
-                    else if (!gender) {
+                    } else if (!gender) {
                         alert('성별을 선택해주세요.');
-                    }              
-                    else{
+                    } else {
                         setStep(3);                                             
                     }
                     break;
-                case 3:{
+                case 3:
                     if (!id) {
                         alert('주소를 작성해주세요.');
-                    }
-                    else if (!(/^(?=.*[a-zA-Z])(?=.*\d).{4,}$/.test(id))){
+                    } else if (!(/^(?=.*[a-zA-Z])(?=.*\d).{4,}$/.test(id))) {
                         alert('주소는 영문자와 숫자의 4자 이상의 조합이어야 합니다.');
-                    }
-                    else{
+                    } else {
                         setStep(4);
                     }
                     break;
-                }
-                case 4:{
+                case 4:
                     if (!pw) {
                         alert('비밀번호를 작성해주세요.');
-                    }
-                    else if (!(/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(pw))){
+                    } else if (!(/^(?=.*[a-zA-Z])(?=.*\d).{8,}$/.test(pw))) {
                         alert('비밀번호는 영문자와 숫자의 8자 이상의 조합이어야 합니다.');
-                    }
-                    else if (confirmPw !== pw){
+                    } else if (confirmPw !== pw) {
                         alert('이전 비밀번호와 같지않습니다.');
-                    }
-                    else{
+                    } else {
                         setStep(5);
                     }
                     break;
-                }
-                case 5:{
+                case 5:
                     if (!tel) {
                         alert('연락처를 기입해주세요.');
-                    }
-                    else if (confirmTel !== tel){
-                        alert('인증번호가 유효하지 않습니다.');
-                    }else{
-                        setStep(6);
-                        await requestSave(); // 데이터 저장  요청   
+                    } else if (!confirmTel) {
+                        alert('인증번호를 입력해주세요.');
+                    } else {
+                        await handleAuthProcess();
                     }
                     break;
-                }
-                case 6:{
-                    
+                case 6:
+                    // 완료 처리
                     break;
-                }
                 default:
                     break;
             }
         }        
-    }
-
-    const requestAuth = async () => {
-        try{
-            const reponse = await axios.get('http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth', null,{
-                params:{
-                    telAuth: tel,
-                }
-            })
-            alert(reponse.telAuth)
-            confirmTel(reponse.telAuth)
-        }catch(error){
-            console.error('Error saving user:', error.response ? error.response.data : error.message);
-        }
-    }
+    };
 
     const requestSave = async () => {
-        // alert('ddd')
         try {
-            // const state = useJoinUserStore.getState();
-            // const { firstName, lastName, year, month, day, gender, id, pw, tel } = state.joinUser;
             const birth = `${year}${month}${day}`;
 
-            const response = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
+            const responseSave = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/user/save', null, {
                 params: {
                     f: firstName,
                     l: lastName,
@@ -250,19 +205,20 @@ export default function Join(){
                     id: id,
                     pw: pw,
                     tel: tel,
-                    nick:"",
+                    nick: "",
                 }
             });
-            alert(response.data); //ok
-        }catch(error){
+            alert(responseSave.data); //ok
+        } catch (error) {
             console.error('Error saving user:', error.response ? error.response.data : error.message);
         }
     };
 
+    
     var form;
-    switch(step){
+    switch (step) {
         case 1: 
-            form=(
+            form = (
                 <div>
                     <div className="join-box">
                         <div className="title-box">
@@ -271,7 +227,7 @@ export default function Join(){
                             <p>이름을 입력하세요</p>
                         </div>
                         <div className="input-box">
-                            <ul className="input-list type1">
+                            <ul className="input-list">
                                 <li>
                                     <input type="text" placeholder='성(선택사항)' value={lastName} onChange={handleLastName} />
                                 </li>
@@ -285,10 +241,10 @@ export default function Join(){
                         </div>
                     </div>
                 </div>
-            )
+            );
             break;
         case 2: 
-            form=(
+            form = (
                 <div className="join-box">
                     <div className="title-box">
                         <img src={iconGoogle} alt="" />
@@ -296,17 +252,16 @@ export default function Join(){
                         <p>생일과 성별을 입력하세요</p>
                     </div>
                     <div className="input-box">
-                        <ul className="input-list type3">
-                            <li>
+                        <ul className="input-list">
+                            <li className="w-33">
                                 <input
                                     type="text"
                                     placeholder='연'
                                     value={year}
                                     onChange={handleYearChange}
-                                    // ref={yearInputRef} // ref를 지정합니다.
                                 />
                             </li>
-                            <li>
+                            <li className="w-33">
                                 <select value={month} onChange={handleMonthChange}>
                                     <option>월</option>
                                     {Months.map((m) => (
@@ -316,8 +271,7 @@ export default function Join(){
                                     ))}
                                 </select>
                             </li>
-        
-                            <li>
+                            <li className="w-33">
                                 <select value={day} onChange={handleDayChange}>
                                     <option>일</option>
                                     {renderDays()}
@@ -337,10 +291,10 @@ export default function Join(){
                         </div>
                     </div>
                 </div>
-            )
+            );
             break;
         case 3: 
-            form=(
+            form = (
                 <div className="join-box">
                     <div className="title-box">
                         <img src={iconGoogle} alt="" />
@@ -348,7 +302,7 @@ export default function Join(){
                         <p>Gmail 새 주소를 만드세요.</p>
                     </div>
                     <div className="input-box">
-                        <ul className="input-list type1">
+                        <ul className="input-list ">
                             <li>
                                 <input
                                     className="id"
@@ -366,10 +320,10 @@ export default function Join(){
                         </div>
                     </div>
                 </div>
-            )
+            );
             break;
         case 4: 
-            form=(
+            form = (
                 <div className="join-box">
                     <div className="title-box">
                         <img src={iconGoogle} alt="" />
@@ -377,7 +331,7 @@ export default function Join(){
                         <p>문자, 숫자, 기호를 조합하여 안전한 비밀번호를 만드세요.</p>
                     </div>
                     <div className="input-box">
-                        <ul className="input-list type1">
+                        <ul className="input-list">
                             <li>
                                 <input 
                                     type={showPassword ? 'text' : 'password'} 
@@ -387,13 +341,23 @@ export default function Join(){
                                 />
                             </li>
                             <li>
-                                <input type={showPassword ? 'text' : 'password'} placeholder='확인' value={confirmPw} onChange={handleConfirmPwChange} />
-                                <label htmlFor="showPasswordCheckbox">
-                                    <input type="checkbox" id="showPasswordCheckbox" 
-                                    onChange={toggleShowPassword}
-                                    onKeyPress={handleNextStepOrKeyPress} />
-                                    <span>비밀번호 표시</span>
-                                </label>
+                                <input 
+                                    type={showPassword ? 'text' : 'password'} 
+                                    placeholder='확인' 
+                                    value={confirmPw} 
+                                    onChange={handleConfirmPwChange} 
+                                />
+                                <div className="showPassword-box">
+                                    <label htmlFor="showPasswordCheckbox">
+                                        <input 
+                                            type="checkbox" 
+                                            id="showPasswordCheckbox"
+                                            onChange={toggleShowPassword}
+                                            onKeyPress={handleNextStepOrKeyPress} 
+                                        />
+                                        <span>비밀번호 표시</span>
+                                    </label>
+                                </div>
                             </li>
                         </ul>
                         <div className="btn-box">
@@ -401,37 +365,44 @@ export default function Join(){
                         </div>
                     </div>
                 </div>
-            )
+            );
             break;
         case 5: 
-            form=(
+            form = (
                 <div className="join-box">
                     <div className="title-box">
                         <img src={iconGoogle} alt="" />
-                        <h1>보안문자 입력</h1>
+                        <h1>인증문자 입력</h1>
                     </div>
                     <div className="input-box">
-                        <ul className="input-list type1">
+                        <ul className="input-list ">
                             <li>
-                                <input type="text" placeholder='전화번호' value={tel} onChange={handleTelChange} />
+                                <input 
+                                    type="text" 
+                                    placeholder='전화번호' 
+                                    value={tel} 
+                                    onChange={(e) => setTel(e.target.value.trim())} 
+                                />
                             </li>
-                            <li>
-                                <input type="text" placeholder='인증번호' 
-                                value={confirmTel} 
-                                // onChange={handleConfirmTelChange} 
-                                onKeyPress={handleNextStepOrKeyPress} />
+                            <li className='receiveNum-box '>
+                                <input 
+                                    type="text" 
+                                    placeholder='인증번호' 
+                                    value={confirmTel} 
+                                    onChange={handleConfirmTelChange} 
+                                />
+                                <button onClick={() => handleAuthProcess('request')}>인증 번호 받기</button>
                             </li>
                         </ul>
                         <div className="btn-box">
-                            <button onClick={requestAuth}>인증 번호 받기</button>
-                            <button onClick={handleNextStepOrKeyPress}>다음</button>
+                            <button onClick={() => handleAuthProcess('verify')}>다음</button>
                         </div>
                     </div>
                 </div>
-            )
+            );
             break;
         case 6: 
-            form=(
+            form = (
                 <div className="join-box step6">
                     <div className="title-box">
                         <img src={iconGoogle} alt="" />
@@ -442,10 +413,12 @@ export default function Join(){
                         <ul className="input-list">
                             <li>회원아이디 : <strong>{id}@gamil.com</strong></li>
                         </ul>
-                        <div className="btn-box"> <button onClick={() => navigate('/main')}>Youtube로 이동하기</button></div>
+                        <div className="btn-box">
+                            <button onClick={() => navigate('/main')}>Youtube로 이동하기</button>
+                        </div>
                     </div>
                 </div>
-            )
+            );
             break;
         default:
             break;

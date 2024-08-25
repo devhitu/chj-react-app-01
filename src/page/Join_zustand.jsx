@@ -10,28 +10,6 @@ export default function Join(){
     const [step,setStep] = useState(1);
     const navigate = useNavigate();  // useNavigate 훅 사용
 
-    // step1
-   
-    const [lastName, setLastName] = useState('');
-    // step2
-    const [year, setYear] = useState('');
-    const [month, setMonth] = useState('');
-    const [day, setDay] = useState('');
-    const [gender, setGender] = useState('');
-    //step3
-    const [id, setId] = useState('');
-    //step4
-    const [pw, setPw] = useState('');
-    const [confirmPw, setConfirmPw] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    //step5
-    const [tel, setTel] = useState('');
-    const [confirmTel, setConfirmTel] = useState('');
-
-
-    const [validTelCode , setValidTelCode] = useState('');
-    
-
     //step1
     const handleFirstName = (e) => {
         const value = e.target.value.trim();
@@ -40,13 +18,13 @@ export default function Join(){
     
     const handleLastName = (e) => {
         const value = e.target.value.trim();
-        setLastName(value); // Zustand 상태 업데이트
+        joinUserStore.setLastName(value); // Zustand 상태 업데이트
     };
 
     //step2 월, 일 계산
     const handleYearChange = (e) => {
         const value = e.target.value.trim();
-        setYear(value); // Zustand 상태 업데이트
+        joinUserStore.setYear(value); // Zustand 상태 업데이트
     };
 
     const Months = [
@@ -77,11 +55,11 @@ export default function Join(){
 
     const handleMonthChange = (e) => {
         const value = parseInt(e.target.value);
-        setMonth(value); // Zustand 상태 업데이트
+        joinUserStore.setMonth(value); // Zustand 상태 업데이트
         
         const days = daysInMonth(parseInt(year), value); // 해당 연도와 월의 마지막 날짜 계산
         if (day > days) {
-            setDay(''); // 선택된 일자 초기화
+            joinUserStore.setDay(''); // 선택된 일자 초기화
         }
     };
 
@@ -104,40 +82,40 @@ export default function Join(){
 
     const handleDayChange = (e) => {
         const value = parseInt(e.target.value);
-        setDay(value); // Zustand 상태 업데이트
+        joinUserStore.setDay(value); // Zustand 상태 업데이트
     };    
 
     const handleGenderChange = (e) => {
         const value = e.target.value.trim();
-        setGender(value);// Zustand 상태 업데이트        
+        joinUserStore.setGender(value);// Zustand 상태 업데이트        
     };
     //step3
     const handIdChange = (e) => {
         const value = e.target.value.trim();
-        setId(value);// Zustand 상태 업데이트        
+        joinUserStore.setId(value);// Zustand 상태 업데이트        
     };
     //step4
     const handlePwChange = (e) => {
         const value = e.target.value.trim();
-        setPw(value);// Zustand 상태 업데이트        
+        joinUserStore.setPw(value);// Zustand 상태 업데이트        
     };
 
     const handleConfirmPwChange = (e) => {
         const inputValue = e.target.value.trim();
-        setConfirmPw(inputValue);
+        joinUserStore.setConfirmPw(inputValue);
     };
 
     const toggleShowPassword = () => {
-        setShowPassword(!showPassword);
+        joinUserStore.setShowPassword(!showPassword);
     };    
     //step5
     const handleTelChange = (e) => {
         const value = e.target.value.trim();
-        setTel(value);// Zustand 상태 업데이트        
+        joinUserStore.setTel(value);// Zustand 상태 업데이트        
     };
     const handleConfirmTelChange = (e) => {
         const inputValue = e.target.value.trim();
-        setConfirmTel(inputValue);
+        joinUserStore.setConfirmTel(inputValue);
     };
 
 

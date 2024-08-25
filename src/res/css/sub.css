@@ -16,15 +16,25 @@
 .sub-wrap.join .join-box .input-box .btn-box button{background: #0b57d0;color:#fff;border-radius: 30px;line-height: 48px;font-size: 14px;padding: 0 26px}
 .sub-wrap.join .language-box{margin-top: 24px;}
 .sub-wrap.join .language-box select{width: 200px;height: 48px;padding: 12px 14px;border: 0;background: #f0f4f9;}
-.sub-wrap.join .language-box select option{}
 
-.sub-wrap.join .join-box .input-box .input-list.type1 li{width: 100%;}
-
-.sub-wrap.join .join-box .input-box .input-list.type3 li:last-child{width: 100%;}
-.sub-wrap.join .join-box .input-box .input-list.type3 li:not(:last-child){width: calc(33.333% - 11px);}
+/* width */
+.sub-wrap.join .join-box .input-box .input-list li{width: 100%;} /*default*/
+.sub-wrap.join .join-box .input-box .input-list li.w-50{width: 50%;}
+.sub-wrap.join .join-box .input-box .input-list li.w-33 {width: calc(33.333% - 11px);}
 
 /* step3 주소 */
-.sub-wrap.join .join-box .input-box .input-list .mail_txt{position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: clamp(11px, 3vmin, 15px); color: #75758a;}
+.sub-wrap.join .mail_txt{position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: clamp(11px, 3vmin, 15px); color: #75758a;}
+
+/* step4 비밀번호 보기 버튼*/
+.sub-wrap.join .showPassword-box{margin-top: 10px;}
+.sub-wrap.join .showPassword-box label{display: flex;align-items: center;gap: 5px;}
+.sub-wrap.join .showPassword-box label input{margin: 0;}
+.sub-wrap.join .showPassword-box label span{ font-size: clamp(11px, 3vmin, 15px); color: #75758a;}
+
+/* step5 인증번호 받기 버튼*/
+.sub-wrap.join .receiveNum-box{display: flex;gap:20px}
+.sub-wrap.join .receiveNum-box input{flex:1}
+.sub-wrap.join .receiveNum-box button{background: #0b57d0;color:#fff;border-radius: 30px;line-height: 48px;font-size: 14px;padding: 0 26px}
 
 /* step6 */
 .step6 .input-list{font-size: 22px;height: 125px;}

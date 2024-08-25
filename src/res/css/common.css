@@ -50,7 +50,7 @@ body * {
 
 @media screen and (max-width:1200px) {
     body {
-        font-size: clamp(11px, 2vmin, 14px);
+        font-size: clamp(11px, 2.4vmin, 14px);
     }
 
     .inner {
