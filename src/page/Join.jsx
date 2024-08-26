@@ -100,11 +100,13 @@ export default function Join() {
             if (action === 'request') {
                 // 인증번호 요청
                 // 예시 http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth?tel=01022223333
-                const responseAuth = await axios.post('http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth', {
-                    telAuth: tel,
+                const responseAuth = await axios.get('http://3.36.28.140:8080/chj_react_restapi/api/auth/telAuth', {
+                    params:{
+                        tel: tel,
+                    }
                 });
     
-                const receivedAuthCode = responseAuth.data.telAuth;
+                const receivedAuthCode = responseAuth.data;
                 console.log(receivedAuthCode)
                 setAuthCode(receivedAuthCode); // 받은 인증번호 저장
     
@@ -112,9 +114,11 @@ export default function Join() {
                 
             } else if (action === 'verify') {
                 // 인증번호 검증
-                if (confirmTel === authCode) {
+                // alert(authCode+','+confirmTel)
+                if (confirmTel.toString() === authCode.toString()) {
                     alert('인증이 완료되었습니다.');
                     setStep(6); // 다음 단계로 이동
+                    await requestSave(); //저장
                 } else {
                     alert('인증번호가 유효하지 않습니다.');
                 }
@@ -184,7 +188,6 @@ export default function Join() {
                     }
                     break;
                 case 6:
-                    // 완료 처리
                     break;
                 default:
                     break;
