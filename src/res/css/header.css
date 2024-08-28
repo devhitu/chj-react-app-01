@@ -7,6 +7,9 @@
 .logo-wrap img{width: 24px;height: 24px;}
 .logo-wrap .logo img{width: 90px;height: auto;}
 
+.login-wrap{display: flex;gap:5px}
+
+
 .asideDim{position: absolute;width: 100%;height: 700vh;background: #000;opacity: 0.8;}
 
 aside {background: #fff;text-align: left;z-index: 2;height: 100vh;}

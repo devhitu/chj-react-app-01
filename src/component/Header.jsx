@@ -22,7 +22,9 @@ export default function Header() {
         </ul>
         <div className="search-wrap"><input type="text" /></div>
         <ul className="login-wrap">
-          <li><a href="/join/step1">회원가입</a></li>
+          <li><a href="/login">로그인</a></li>
+          <li>&#183;</li>
+          <li><a href="/join">회원가입</a></li>
           {/* <li className="btn-mode"><span className="emoji" onClick={toggleEmoji}>{mode}</span></li> */}
         </ul>
       </header>

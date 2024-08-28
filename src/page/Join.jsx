@@ -223,7 +223,7 @@ export default function Join() {
         case 1: 
             form = (
                 <div>
-                    <div className="join-box">
+                    <div className="sub-box">
                         <div className="title-box">
                             <img src={iconGoogle} alt="" />
                             <h1>Google 계정 만들기</h1>
@@ -248,7 +248,7 @@ export default function Join() {
             break;
         case 2: 
             form = (
-                <div className="join-box">
+                <div className="sub-box">
                     <div className="title-box">
                         <img src={iconGoogle} alt="" />
                         <h1>기본 정보</h1>
@@ -298,7 +298,7 @@ export default function Join() {
             break;
         case 3: 
             form = (
-                <div className="join-box">
+                <div className="sub-box">
                     <div className="title-box">
                         <img src={iconGoogle} alt="" />
                         <h1>Gmail 주소 선택하기</h1>
@@ -310,7 +310,7 @@ export default function Join() {
                                 <input
                                     className="id"
                                     type="text"
-                                    placeholder='주소를 적어주세요'
+                                    placeholder='아이디를 적어주세요'
                                     value={id}
                                     onChange={handIdChange}
                                     onKeyPress={handleNextStepOrKeyPress} 
@@ -327,7 +327,7 @@ export default function Join() {
             break;
         case 4: 
             form = (
-                <div className="join-box">
+                <div className="sub-box">
                     <div className="title-box">
                         <img src={iconGoogle} alt="" />
                         <h1>안전한 비밀번호 만들기</h1>
@@ -372,7 +372,7 @@ export default function Join() {
             break;
         case 5: 
             form = (
-                <div className="join-box">
+                <div className="sub-box">
                     <div className="title-box">
                         <img src={iconGoogle} alt="" />
                         <h1>인증문자 입력</h1>
@@ -406,7 +406,7 @@ export default function Join() {
             break;
         case 6: 
             form = (
-                <div className="join-box step6">
+                <div className="sub-box step6">
                     <div className="title-box">
                         <img src={iconGoogle} alt="" />
                         <h1>회원가입 완료</h1>
@@ -417,7 +417,7 @@ export default function Join() {
                             <li>회원아이디 : <strong>{id}@gamil.com</strong></li>
                         </ul>
                         <div className="btn-box">
-                            <button onClick={() => navigate('/main')}>Youtube로 이동하기</button>
+                            <button onClick={() => navigate('/')}>Youtube로 이동하기</button>
                         </div>
                     </div>
                 </div>
@@ -431,12 +431,12 @@ export default function Join() {
         <div className='sub-wrap join'>
             <div className="inner">
                 {form}
-                <div className="language-box">
+                {/* <div className="language-box">
                     <select name="" id="">
                         <option value="">한국어</option>
                         <option value="">English</option>
                     </select>
-                </div>
+                </div> */}
             </div>
         </div>
     );
