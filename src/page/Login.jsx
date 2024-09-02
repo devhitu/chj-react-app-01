@@ -10,9 +10,9 @@ export default function Login() {
 
     // 상태 정의
     const [id, setId] = useState('');
-    const [confirmId, setConfirmId] = useState('');
+    // const [confirmId, setConfirmId] = useState('');
     const [pw, setPw] = useState('');
-    const [confirmPw, setConfirmPw] = useState('');
+    // const [confirmPw, setConfirmPw] = useState('');
     const [showPassword, setShowPassword] = useState(false);    
 
     // 비밀번호 표시 토글 함수
@@ -30,23 +30,35 @@ export default function Login() {
             e.preventDefault(); // 기본 동작을 막음
             
             try {
-                const responseSave = await axios.get('http://3.36.28.140:8080/chj_react_restapi/api/user/all', {
+                const responseSave = await axios.get('http://3.36.28.140:8080/chj_react_restapi/api/user/login', {
                     params: {
                         id: id,
                         pw: pw,
                     }
                 });
 
-                setConfirmId(responseSave.data.id); 
-                setConfirmPw(responseSave.data.pw); 
+                console.log(responseSave.data)
 
-                if (confirmId !== id) {
-                    alert('아이디가 유효하지 않습니다.');
-                } else if (confirmPw !== pw) {
-                    alert('비밀번호가 유효하지 않습니다');
-                } else {
-                    navigate('/');
+                if(responseSave.data==''){
+                    alert('로그인 실패');
+                    return;
                 }
+                var loginUser = responseSave.data; //zustand
+                
+                // else{
+                //     alert('로그인 성공')
+                // }
+
+                // setConfirmId(responseSave.data.id); 
+                // setConfirmPw(responseSave.data.pw); 
+
+                // if (confirmId !== id) {
+                //     alert('아이디가 유효하지 않습니다.');
+                // } else if (confirmPw !== pw) {
+                //     alert('비밀번호가 유효하지 않습니다');
+                // } else {
+                //     navigate('/');
+                // }
 
             } catch (error) {
                 console.error('Error saving user:', error.response ? error.response.data : error.message);
