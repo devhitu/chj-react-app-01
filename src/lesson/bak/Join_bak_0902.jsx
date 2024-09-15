@@ -30,27 +30,12 @@ export default function Join() {
     const [authCode, setAuthCode] = useState('');
 
     // step1 handlers
-    // const handleFirstName = (e) => setFirstName(e.target.value.trim());
-    // const handleLastName = (e) => setLastName(e.target.value.trim());
-    // const handleYearChange = (e) => setYear(e.target.value.trim());
-    
-    const handleFirstName = (e) => {
-        const value = e.target.value.trim();
-        joinUserStore.setFirstName(value); // Zustand 상태 업데이트
-    };
-
-    const handleLastName = (e) => {
-        const value = e.target.value.trim();
-        joinUserStore.setLastName(value); // Zustand 상태 업데이트
-    };
-        
+    const handleFirstName = (e) => setFirstName(e.target.value.trim());
+    const handleLastName = (e) => setLastName(e.target.value.trim());
 
     // step2 handlers
-    const handleYearChange = (e) => {
-        const value = e.target.value.trim();
-        joinUserStore.setYear(value); // Zustand 상태 업데이트
-    };
-        
+    const handleYearChange = (e) => setYear(e.target.value.trim());
+
     const Months = [
         { value: 1, label: '1월' },
         { value: 2, label: '2월' },

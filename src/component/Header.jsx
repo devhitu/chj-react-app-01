@@ -5,12 +5,20 @@ import useStore from '../store/store';
 // 이미지
 import iconMenu from '../res/img/icons/icon_menu.svg';
 import logo from '../res/img/logo.svg';
+import icon_my from '../res/img/icon_my.svg';
+import icon_subscribe from '../res/img/icon_subscribe.svg';
 
 export default function Header() {
 
   const toggleAside = useStore((state) => state.toggleAside);
   const handleToggleAside = () => {
     toggleAside(); // Zustand를 통해 aside의 가시성 토글
+  };
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  const toggleMenu = () => {
+    setIsVisible(!isVisible);
   };
 
   return (
@@ -25,9 +33,25 @@ export default function Header() {
           <li><a href="/login">로그인</a></li>
           <li>&#183;</li>
           <li><a href="/join">회원가입</a></li>
-          {/* <li className="btn-mode"><span className="emoji" onClick={toggleEmoji}>{mode}</span></li> */}
+          <li>&#183;</li>
+          <li>
+            <a href="#" onClick={(e) => {
+              e.preventDefault();
+              toggleMenu();
+            }}>
+              설정
+            </a>
+          </li>
         </ul>
       </header>
+      {isVisible && (
+        <div className="settings_pop">
+          <ul>
+            <li><a href="/account"><img src={icon_my} alt="" />계정</a></li>
+            <li><a href="/upload"><img src={icon_subscribe} alt="" />비디오 업로드</a></li>
+          </ul>
+        </div>
+      )}
     </>
   )
 }

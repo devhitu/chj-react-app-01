@@ -4,25 +4,28 @@ import Header from '../component/Header';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import iconGoogle from '../res/img/icons/icon_google.svg';
+import useJoinUserStore from '../store/useJoinUserStore';
+
 
 export default function Login() {
-    const navigate = useNavigate();  // useNavigate 훅 사용
+    const navigate = useNavigate();
+    const joinUserStore = useJoinUserStore();
 
-    // 상태 정의
     const [id, setId] = useState('');
-    // const [confirmId, setConfirmId] = useState('');
     const [pw, setPw] = useState('');
-    // const [confirmPw, setConfirmPw] = useState('');
     const [showPassword, setShowPassword] = useState(false);    
 
-    // 비밀번호 표시 토글 함수
     const toggleShowPassword = () => setShowPassword(!showPassword);
 
-    // 아이디 입력 핸들러
-    const handleIdChange = (e) => setId(e.target.value.trim());
+    const handleIdChange = (e) => {
+        const value = e.target.value.trim();
+        joinUserStore.setId(value); // Zustand 상태 업데이트
+    };
+    const handlePwChange = (e) => {
+        const value = e.target.value.trim();
+        joinUserStore.setPw(value); // Zustand 상태 업데이트
+    };
 
-    // 비밀번호 입력 핸들러
-    const handlePwChange = (e) => setPw(e.target.value.trim());
 
     // 다음 단계 처리 함수
     const handleNextStepOrKeyPress = async (e) => {
@@ -30,35 +33,20 @@ export default function Login() {
             e.preventDefault(); // 기본 동작을 막음
             
             try {
-                const responseSave = await axios.get('http://3.36.28.140:8080/chj_react_restapi/api/user/login', {
+                const resposeLogin = await axios.get('http://3.36.28.140:8080/chj_react_restapi/api/user/login', {
                     params: {
                         id: id,
                         pw: pw,
                     }
                 });
 
-                console.log(responseSave.data)
-
-                if(responseSave.data==''){
-                    alert('로그인 실패');
+                if(resposeLogin.data==''){
+                    alert('사용자정보가 유효하지 않습니다.');
                     return;
+                }else{
+                    navigate('/');
                 }
-                var loginUser = responseSave.data; //zustand
-                
-                // else{
-                //     alert('로그인 성공')
-                // }
-
-                // setConfirmId(responseSave.data.id); 
-                // setConfirmPw(responseSave.data.pw); 
-
-                // if (confirmId !== id) {
-                //     alert('아이디가 유효하지 않습니다.');
-                // } else if (confirmPw !== pw) {
-                //     alert('비밀번호가 유효하지 않습니다');
-                // } else {
-                //     navigate('/');
-                // }
+                var loginUser = resposeLogin.data; //zustand
 
             } catch (error) {
                 console.error('Error saving user:', error.response ? error.response.data : error.message);
@@ -101,6 +89,7 @@ export default function Login() {
                                             type="checkbox" 
                                             id="showPasswordCheckbox"
                                             onChange={toggleShowPassword} 
+                                            onKeyPress={handleNextStepOrKeyPress} 
                                         />
                                         <span>비밀번호 표시</span>
                                     </label>

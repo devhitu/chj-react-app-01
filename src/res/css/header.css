@@ -26,6 +26,10 @@ aside .btns-menu-bar:hover{background: #ddd;}
 aside .btn-menu-bar > div ul li {width: 100%;}
 aside .btn-menu-bar > div ul li a {display: flex;align-items: center;gap: 10px;font-size: 14px;padding: 10px 10px;}
 
+/* settings */
+.settings_pop{position: absolute; right: 10px; top: 45px; z-index: 3; width: 300px; border-radius: 10px; box-shadow: 1px 3px 6px #0000003b; padding: 40px 20px; background: #fff; font-size: 14px; line-height: 1.5;}
+.settings_pop ul{}
+.settings_pop ul li{}
 
 @media screen and (max-width:1200px) {
 
