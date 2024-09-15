@@ -28,8 +28,10 @@ aside .btn-menu-bar > div ul li a {display: flex;align-items: center;gap: 10px;f
 
 /* settings */
 .settings_pop{position: absolute; right: 10px; top: 45px; z-index: 3; width: 300px; border-radius: 10px; box-shadow: 1px 3px 6px #0000003b; padding: 40px 20px; background: #fff; font-size: 14px; line-height: 1.5;}
-.settings_pop ul{}
-.settings_pop ul li{}
+.settings_pop ul{display: flex;flex-direction: column;gap:10px}
+.settings_pop ul li a{display: flex;align-items: center;justify-content: space-between;}
+.settings_pop ul li a span{display: flex;align-items: center;gap:5px}
+.settings_pop ul li img{width: 16px;}
 
 @media screen and (max-width:1200px) {
 

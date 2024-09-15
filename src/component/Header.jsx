@@ -5,8 +5,8 @@ import useStore from '../store/store';
 // 이미지
 import iconMenu from '../res/img/icons/icon_menu.svg';
 import logo from '../res/img/logo.svg';
-import icon_my from '../res/img/icon_my.svg';
-import icon_subscribe from '../res/img/icon_subscribe.svg';
+import icon_my from '../res/img/icons/icon_my.svg';
+import icon_subscribe from '../res/img/icons/icon_subscribe.svg';
 
 export default function Header() {
 
@@ -47,8 +47,8 @@ export default function Header() {
       {isVisible && (
         <div className="settings_pop">
           <ul>
-            <li><a href="/account"><img src={icon_my} alt="" />계정</a></li>
-            <li><a href="/upload"><img src={icon_subscribe} alt="" />비디오 업로드</a></li>
+            <li><a href="/account"><span><img src={icon_my} alt="" />계정</span>&gt;</a></li>
+            <li><a href="/upload"><span><img src={icon_subscribe} alt="" />비디오 업로드</span>&gt;</a></li>
           </ul>
         </div>
       )}
